@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GridPay</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        /* Use a nice, modern font */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom styles for the animation canvas */
+        #electricity-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0; /* Place behind other content */
+        }
+        /* Make content relative to be on top of the canvas */
+        .content-container {
+            position: relative;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white">
+
+    <!-- The canvas for the animated background -->
+    <canvas id="electricity-canvas"></canvas>
+
+    <div class="content-container min-h-screen flex flex-col items-center justify-center p-4">
+        
+        <!-- Navigation Bar -->
+        <nav class="w-full max-w-7xl mx-auto p-4 md:p-6 bg-gray-800 bg-opacity-80 rounded-xl shadow-lg backdrop-blur-sm mb-12">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <!-- Logo / Site Title -->
+                <a href="#" class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 hover:scale-105 transition-transform duration-300 mb-4 md:mb-0">
+                    GridPay
+                </a>
+                
+                <!-- Nav Links -->
+                <div class="flex flex-wrap justify-center gap-6 text-lg font-medium">
+                    <a href="#" class="text-gray-300 hover:text-cyan-400 transition-colors duration-200">Home</a>
+                    <a href="#" class="text-gray-300 hover:text-cyan-400 transition-colors duration-200">Services</a>
+                    <a href="#" class="text-gray-300 hover:text-cyan-400 transition-colors duration-200">About Us</a>
+                    <a href="#" class="text-gray-300 hover:text-cyan-400 transition-colors duration-200">Contact</a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Hero Section -->
+        <main class="flex-grow flex items-center justify-center">
+            <div class="max-w-4xl text-center p-8 md:p-12 bg-gray-800 bg-opacity-70 rounded-3xl shadow-2xl border border-gray-700 backdrop-blur-md">
+                
+                <!-- Lightbulb Icon and Title -->
+                <div class="flex items-center justify-center space-x-4 mb-4">
+                    <i class="fas fa-lightbulb text-4xl text-yellow-300"></i>
+                    <h1 class="text-4xl sm:text-5xl md:text-7xl font-extrabold leading-tight text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-600">
+                       ⚡ Power Your Home. Protect Your Future.
+                    </h1>
+                </div>
+
+                <p class="mt-6 text-lg md:text-xl text-gray-300 max-w-2xl mx-auto">
+                  💡 With GridPay, get pay-as-you-go electricity that’s fair, flexible, and secure.📱
+                </p>
+                
+                <!-- Feature List -->
+                <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+                    <div class="flex items-start space-x-4 p-4 rounded-lg bg-gray-900 bg-opacity-60 border border-gray-700 backdrop-blur-sm">
+                        <i class="fas fa-shield-halved text-cyan-400 text-2xl mt-1"></i>
+                        <p class="text-sm md:text-base text-gray-300">
+                            AI-powered fraud detection-keeps your meter safe.
+                        </p>
+                    </div>
+                    <div class="flex items-start space-x-4 p-4 rounded-lg bg-gray-900 bg-opacity-60 border border-gray-700 backdrop-blur-sm">
+                        <i class="fas fa-mobile-alt text-cyan-400 text-2xl mt-1"></i>
+                        <p class="text-sm md:text-base text-gray-300">
+                            Micropayments-via mobile money fit your budget.
+                        </p>
+                    </div>
+                    <div class="flex items-start space-x-4 p-4 rounded-lg bg-gray-900 bg-opacity-60 border border-gray-700 backdrop-blur-sm">
+                        <i class="fas fa-leaf text-cyan-400 text-2xl mt-1"></i>
+                        <p class="text-sm md:text-base text-gray-300">
+                            Smart energy-saving tips-help you cut costs and reduce waste.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Meter Box to display statistic with icons -->
+                <div class="mt-10 flex justify-center items-center space-x-4">
+                    <!-- Left wire icon -->
+                    <i class="fas fa-bolt text-red-400 text-2xl"></i>
+                    
+                    <div class="w-72 p-4 bg-gray-900 bg-opacity-60 border border-red-500 rounded-lg shadow-xl backdrop-blur-sm">
+                        <div class="text-center text-sm font-semibold text-gray-400">Total Loss Encountered from Theft (2025)</div>
+                        <div class="flex items-center justify-center mt-2">
+                            <!-- This is the element that will count up -->
+                            <span id="loss-counter" class="text-2xl font-bold text-red-400">0 GWh</span>
+                        </div>
+                        <p class="mt-2 text-xs text-gray-500">A gigawatt-hour (GWh) is one billion watt-hours.</p>
+                    </div>
+
+                    <!-- Right wire icon -->
+                    <i class="fas fa-bolt text-red-400 text-2xl"></i>
+                </div>
+
+              
+            </div>
+        </main>
+        
+        <!-- Footer Section -->
+        <footer class="w-full bg-gray-950 mt-12 p-6 text-center">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-gray-400 text-sm">
+                <div class="mb-4 md:mb-0">
+                    &copy; 2025 GridPay. All rights reserved.
+                </div>
+                
+                <!-- Footer Links -->
+                <div class="flex flex-wrap justify-center gap-6 font-medium">
+                    <a href="#" class="hover:text-cyan-400 transition-colors duration-200">About Us</a>
+                    <a href="#" class="hover:text-cyan-400 transition-colors duration-200">Services</a>
+                    <a href="#" class="hover:text-cyan-400 transition-colors duration-200">Contact</a>
+                    <a href="#" class="hover:text-cyan-400 transition-colors duration-200">Privacy Policy</a>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        // JavaScript for the canvas animation and counting effect
+        window.onload = function() {
+            const canvas = document.getElementById('electricity-canvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            const particleCount = 150; // Number of particles for the animation
+
+            // Set the canvas size to match the window
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+            resizeCanvas();
+
+            // Particle class to manage each animated point
+            class Particle {
+                constructor() {
+                    this.x = Math.random() * canvas.width;
+                    this.y = Math.random() * canvas.height;
+                    this.vx = (Math.random() - 0.5) * 1.5; // Velocity x
+                    this.vy = (Math.random() - 0.5) * 1.5; // Velocity y
+                    this.radius = Math.random() * 1.5 + 1; // Radius of the particle
+                    this.color = 'rgba(0, 191, 255, ' + (Math.random() * 0.8 + 0.2) + ')'; // Cyan/blue color with transparency
+                    this.originalColor = this.color;
+                    this.life = Math.random() * 50 + 50; // Particle lifetime
+                }
+
+                draw() {
+                    ctx.beginPath();
+                    // Corrected the arc method call to use the correct radius and number of arguments
+                    ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                    ctx.closePath();
+                }
+
+                update() {
+                    // Update position
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    // Bounce off the edges
+                    if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
+                    if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+
+                    // Decrease particle life and fade it out
+                    this.life--;
+                    this.color = 'rgba(0, 191, 255, ' + (this.life / 100) + ')';
+
+                    // If particle dies, reset it
+                    if (this.life <= 0) {
+                        this.x = Math.random() * canvas.width;
+                        this.y = Math.random() * canvas.height;
+                        this.vx = (Math.random() - 0.5) * 1.5;
+                        this.vy = (Math.random() - 0.5) * 1.5;
+                        this.radius = Math.random() * 1.5 + 1;
+                        this.color = this.originalColor;
+                        this.life = Math.random() * 50 + 50;
+                    }
+                }
+            }
+
+            // Create initial particles
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle());
+            }
+
+            // Animation loop
+            function animate() {
+                // Clear the canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                // Draw and update each particle
+                particles.forEach(p => {
+                    p.draw();
+                    p.update();
+                });
+                
+                // Draw connecting lines between close particles
+                for (let a = 0; a < particles.length; a++) {
+                    for (let b = a; b < particles.length; b++) {
+                        const dist = Math.hypot(particles[a].x - particles[b].x, particles[a].y - particles[b].y);
+                        // Only draw a line if they are close enough
+                        if (dist < 100) {
+                            ctx.beginPath();
+                            ctx.moveTo(particles[a].x, particles[a].y);
+                            ctx.lineTo(particles[b].x, particles[b].y);
+                            // Adjust line opacity based on distance
+                            ctx.strokeStyle = `rgba(0, 191, 255, ${1 - (dist / 100)})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.stroke();
+                            ctx.closePath();
+                        }
+                    }
+                }
+
+                // Request the next frame
+                window.requestAnimationFrame(animate);
+            }
+            animate();
+
+            // Counting animation for the meter box
+            const counterElement = document.getElementById('loss-counter');
+            const targetNumber = 14500;
+            const duration = 2000; // 2 seconds
+            let start = null;
+
+            function count(timestamp) {
+                if (!start) start = timestamp;
+                const progress = timestamp - start;
+                const currentNumber = Math.min(Math.floor(progress / duration * targetNumber), targetNumber);
+                counterElement.textContent = `${currentNumber.toLocaleString()} GWh`;
+
+                if (currentNumber < targetNumber) {
+                    window.requestAnimationFrame(count);
+                }
+            }
+            
+            // Start the counting animation
+            window.requestAnimationFrame(count);
+        };
+    </script>
+
+</body>
+</html>

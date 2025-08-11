@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login and Register</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Custom Eskom blue color for Tailwind */
+        .bg-eskom-blue {
+            background-color: #004d73;
+        }
+        .hover\:bg-eskom-blue-dark:hover {
+            background-color: #00334e;
+        }
+        .text-eskom-blue {
+            color: #004d73;
+        }
+        .focus\:ring-eskom-blue:focus {
+            --tw-ring-color: #004d73;
+        }
+        /* Password strength bar styling */
+        .password-strength-bar-container {
+            height: 8px;
+            background-color: #e5e7eb;
+            border-radius: 9999px;
+            overflow: hidden;
+        }
+        .password-strength-bar {
+            height: 100%;
+            width: 0;
+            border-radius: 9999px;
+            transition: width 0.3s ease-in-out, background-color 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="bg-eskom-blue">
+
+    <div class="min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white text-gray-900 rounded-2xl shadow-xl p-8 max-w-md w-full">
+
+            <!-- Message Box -->
+            <div id="message-box" class="mb-4 hidden p-3 rounded-xl text-center font-medium"></div>
+
+            <!-- Login Page Content -->
+            <div id="login-page" class="space-y-4">
+                <h1 class="text-3xl font-bold text-center mb-6 text-eskom-blue">Login</h1>
+                <form id="login-form" class="space-y-4">
+                    <div>
+                        <label for="login-email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                        <input type="email" id="login-email" class="mt-1 block w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-eskom-blue focus:border-transparent transition" required>
+                    </div>
+                    <div>
+                        <label for="login-password" class="block text-sm font-medium text-gray-700">Password</label>
+                        <div class="relative mt-1">
+                            <input type="password" id="login-password" class="block w-full pr-10 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-eskom-blue focus:border-transparent transition" required>
+                            <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500" onclick="togglePasswordVisibility('login-password', this)">
+                                <!-- Eye Icon SVG -->
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.575 3.01 9.963 7.172.03.1.03.2 0 .33-.004.095-.018.19-.04.282A10.022 10.022 0 0112 19.5c-4.638 0-8.575-3.01-9.963-7.172z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-eskom-blue text-white font-semibold py-2 px-4 rounded-lg hover:bg-eskom-blue-dark focus:outline-none focus:ring-2 focus:ring-eskom-blue focus:ring-offset-2 focus:ring-offset-white transition">
+                        Login
+                    </button>
+                </form>
+                <div class="mt-6 text-center text-sm">
+                    <span>Don't have an account?</span>
+                    <a href="#register" id="to-register-link" class="text-eskom-blue hover:text-eskom-blue-dark font-medium transition ml-1">Register here.</a>
+                </div>
+            </div>
+
+            <!-- Register Page Content (hidden by default) -->
+            <div id="register-page" class="space-y-4 hidden">
+                <h1 class="text-3xl font-bold text-center mb-6 text-eskom-blue">Register</h1>
+                <form id="register-form" class="space-y-4">
+                    <div>
+                        <label for="register-fullnames" class="block text-sm font-medium text-gray-700">Full Names</label>
+                        <input type="text" id="register-fullnames" class="mt-1 block w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-eskom-blue focus:border-transparent transition" required>
+                    </div>
+                    <div>
+                        <label for="register-email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                        <input type="email" id="register-email" class="mt-1 block w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-eskom-blue focus:border-transparent transition" required>
+                    </div>
+                    <div>
+                        <label for="register-password" class="block text-sm font-medium text-gray-700">Password</label>
+                        <div class="relative mt-1">
+                            <input type="password" id="register-password" class="block w-full pr-10 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-eskom-blue focus:border-transparent transition" required>
+                            <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500" onclick="togglePasswordVisibility('register-password', this)">
+                                <!-- Eye Icon SVG -->
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.575 3.01 9.963 7.172.03.1.03.2 0 .33-.004.095-.018.19-.04.282A10.022 10.022 0 0112 19.5c-4.638 0-8.575-3.01-9.963-7.172z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mt-2" id="password-strength-container">
+                        <div class="password-strength-bar-container">
+                            <div id="password-strength-bar" class="password-strength-bar"></div>
+                        </div>
+                        <span id="password-strength-text" class="block text-xs font-medium mt-1 text-gray-500"></span>
+                    </div>
+                    <div>
+                        <label for="register-confirm-password" class="block text-sm font-medium text-gray-700">Confirm Password</label>
+                        <div class="relative mt-1">
+                            <input type="password" id="register-confirm-password" class="block w-full pr-10 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-eskom-blue focus:border-transparent transition" required>
+                            <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500" onclick="togglePasswordVisibility('register-confirm-password', this)">
+                                <!-- Eye Icon SVG -->
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.575 3.01 9.963 7.172.03.1.03.2 0 .33-.004.095-.018.19-.04.282A10.022 10.022 0 0112 19.5c-4.638 0-8.575-3.01-9.963-7.172z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" class="w-full bg-eskom-blue text-white font-semibold py-2 px-4 rounded-lg hover:bg-eskom-blue-dark focus:outline-none focus:ring-2 focus:ring-eskom-blue focus:ring-offset-2 focus:ring-offset-white transition">
+                        Register
+                    </button>
+                </form>
+                <div class="mt-6 text-center text-sm">
+                    <span>Already have an account?</span>
+                    <a href="#login" id="to-login-link" class="text-eskom-blue hover:text-eskom-blue-dark font-medium transition ml-1">Login here.</a>
+                </div>
+            </div>
+
+            <!-- Logged-in Dashboard (hidden by default) -->
+            <div id="dashboard" class="text-center hidden">
+                <h2 class="text-2xl font-bold mb-4">Welcome!</h2>
+                <p id="user-info" class="mb-6"></p>
+                <button id="sign-out-btn" class="w-full bg-red-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-white transition">
+                    Sign Out
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module">
+        // Import the necessary Firebase functions
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        
+        // Firebase configuration from global variables
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        // Initialize Firebase
+        let app;
+        let auth;
+
+        if (Object.keys(firebaseConfig).length > 0) {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            // Sign in with custom token if available
+            (async () => {
+                try {
+                    if (initialAuthToken) {
+                        await signInWithCustomToken(auth, initialAuthToken);
+                    }
+                } catch (error) {
+                    console.error("Error signing in with custom token:", error);
+                }
+            })();
+        } else {
+            console.error("Firebase config is missing. The app will not be able to authenticate.");
+        }
+
+        // Get references to all the elements
+        const loginPage = document.getElementById('login-page');
+        const registerPage = document.getElementById('register-page');
+        const dashboard = document.getElementById('dashboard');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const messageBox = document.getElementById('message-box');
+        const signOutBtn = document.getElementById('sign-out-btn');
+        const userInfo = document.getElementById('user-info');
+        const passwordInput = document.getElementById('register-password');
+        const confirmPasswordInput = document.getElementById('register-confirm-password');
+        const strengthBar = document.getElementById('password-strength-bar');
+        const strengthText = document.getElementById('password-strength-text');
+        
+        // Function to show a message
+        const showMessage = (message, type) => {
+            messageBox.textContent = message;
+            messageBox.className = 'mb-4 p-3 rounded-xl text-center font-medium'; // Reset classes
+            if (type === 'success') {
+                messageBox.classList.add('bg-green-600', 'text-white');
+            } else if (type === 'error') {
+                messageBox.classList.add('bg-red-600', 'text-white');
+            }
+            messageBox.classList.remove('hidden');
+            setTimeout(() => {
+                messageBox.classList.add('hidden');
+            }, 3000);
+        };
+
+        // Function to toggle password visibility
+        window.togglePasswordVisibility = (passwordInputId, button) => {
+            const passwordInput = document.getElementById(passwordInputId);
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                // Change icon to 'eye-slash' or a similar closed eye
+                button.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.41a4.995 4.995 0 0112.02 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5s-7.5 7.5-7.5 7.5S12 19.5 12 19.5s7.5-7.5 7.5-7.5S12 4.5 12 4.5zM12 15a3 3 0 100-6 3 3 0 000 6z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.575 3.01 9.963 7.172.03.1.03.2 0 .33-.004.095-.018.19-.04.282A10.022 10.022 0 0112 19.5c-4.638 0-8.575-3.01-9.963-7.172z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.41a4.995 4.995 0 0112.02 0z" />
+                    </svg>
+                `;
+            } else {
+                passwordInput.type = 'password';
+                // Change icon back to 'eye'
+                button.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.575 3.01 9.963 7.172.03.1.03.2 0 .33-.004.095-.018.19-.04.282A10.022 10.022 0 0112 19.5c-4.638 0-8.575-3.01-9.963-7.172z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                `;
+            }
+        };
+
+        // Function to check password strength
+        const checkPasswordStrength = (password) => {
+            let strength = 0;
+            if (password.length > 5) strength++;
+            if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+            if (password.match(/[0-9]/)) strength++;
+            if (password.match(/[^a-zA-Z0-9]/)) strength++;
+
+            if (password.length > 0) {
+                switch(strength) {
+                    case 0:
+                    case 1:
+                        strengthBar.style.width = '33%';
+                        strengthBar.style.backgroundColor = '#ef4444'; // Red
+                        strengthText.textContent = 'Weak';
+                        strengthText.classList.remove('text-gray-500', 'text-yellow-500', 'text-green-600');
+                        strengthText.classList.add('text-red-600');
+                        break;
+                    case 2:
+                        strengthBar.style.width = '66%';
+                        strengthBar.style.backgroundColor = '#f59e0b'; // Yellow
+                        strengthText.textContent = 'Medium';
+                        strengthText.classList.remove('text-gray-500', 'text-red-600', 'text-green-600');
+                        strengthText.classList.add('text-yellow-500');
+                        break;
+                    case 3:
+                    case 4:
+                        strengthBar.style.width = '100%';
+                        strengthBar.style.backgroundColor = '#10b981'; // Green
+                        strengthText.textContent = 'Strong';
+                        strengthText.classList.remove('text-gray-500', 'text-red-600', 'text-yellow-500');
+                        strengthText.classList.add('text-green-600');
+                        break;
+                }
+            } else {
+                // Reset to default if password is empty
+                strengthBar.style.width = '0';
+                strengthText.textContent = '';
+                strengthText.classList.remove('text-red-600', 'text-yellow-500', 'text-green-600');
+                strengthText.classList.add('text-gray-500');
+            }
+        };
+
+        // Function to navigate between pages
+        const navigate = () => {
+            const hash = window.location.hash;
+            if (hash === '#register') {
+                loginPage.classList.add('hidden');
+                registerPage.classList.remove('hidden');
+            } else {
+                loginPage.classList.remove('hidden');
+                registerPage.classList.add('hidden');
+            }
+            messageBox.classList.add('hidden');
+        };
+
+        // Listen for hash changes
+        window.addEventListener('hashchange', navigate);
+
+        // Handle initial load
+        document.addEventListener('DOMContentLoaded', () => {
+            navigate();
+        });
+
+        // Add event listener to password input to check strength
+        if (passwordInput) {
+            passwordInput.addEventListener('input', (e) => {
+                checkPasswordStrength(e.target.value);
+            });
+        }
+
+        // Handle Register form submission
+        if (registerForm) {
+            registerForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (!auth) {
+                    showMessage('Firebase not initialized. Cannot register.', 'error');
+                    return;
+                }
+                const email = document.getElementById('register-email').value;
+                const password = document.getElementById('register-password').value;
+                const confirmPassword = document.getElementById('register-confirm-password').value;
+
+                if (password !== confirmPassword) {
+                    showMessage('Passwords do not match.', 'error');
+                    return;
+                }
+
+                try {
+                    await createUserWithEmailAndPassword(auth, email, password);
+                    showMessage('Registration successful! You can now log in.', 'success');
+                    registerForm.reset();
+                    checkPasswordStrength(''); // Reset the strength bar
+                    // Switch to login page after successful registration
+                    window.location.hash = '#login';
+                } catch (error) {
+                    const errorMessage = error.message;
+                    showMessage(errorMessage, 'error');
+                }
+            });
+        }
+        
+        // Handle Login form submission
+        if (loginForm) {
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (!auth) {
+                    showMessage('Firebase not initialized. Cannot login.', 'error');
+                    return;
+                }
+                const email = document.getElementById('login-email').value;
+                const password = document.getElementById('login-password').value;
+
+                try {
+                    await signInWithEmailAndPassword(auth, email, password);
+                    showMessage('Login successful!', 'success');
+                } catch (error) {
+                    const errorMessage = error.message;
+                    showMessage(errorMessage, 'error');
+                }
+            });
+        }
+        
+        // Handle Sign Out button click
+        if (signOutBtn) {
+            signOutBtn.addEventListener('click', async () => {
+                if (!auth) return;
+                try {
+                    await signOut(auth);
+                    showMessage('Signed out successfully!', 'success');
+                } catch (error) {
+                    const errorMessage = error.message;
+                    showMessage(errorMessage, 'error');
+                }
+            });
+        }
+
+        // Authentication state change listener
+        if (auth) {
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // User is signed in
+                    loginPage.classList.add('hidden');
+                    registerPage.classList.add('hidden');
+                    dashboard.classList.remove('hidden');
+                    userInfo.textContent = `You are logged in with user ID: ${user.uid}`;
+                } else {
+                    // User is signed out
+                    dashboard.classList.add('hidden');
+                    navigate(); // Go back to the correct page based on the hash
+                }
+            });
+        }
+    </script>
+</body>
+</html>
