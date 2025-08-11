@@ -12,7 +12,6 @@
         /* Use a nice, modern font */
         body {
             font-family: 'Inter', sans-serif;
-            transition: background-color 0.5s ease;
         }
 
         /* Custom styles for the animation canvas */
@@ -32,12 +31,6 @@
         }
 
         /* Gradient overlay for thematic effect, adjusted for themes */
-        .gradient-overlay-dark {
-            background: radial-gradient(circle, rgba(0, 191, 255, 0.1) 0%, rgba(13, 17, 23, 0) 70%);
-        }
-        .gradient-overlay-light {
-            background: radial-gradient(circle, rgba(0, 100, 200, 0.1) 0%, rgba(243, 244, 246, 0) 70%);
-        }
         .gradient-overlay {
             position: fixed;
             top: 0;
@@ -45,7 +38,7 @@
             width: 100%;
             height: 100%;
             z-index: 5;
-            transition: background 0.5s ease;
+            background: radial-gradient(circle, rgba(0, 100, 200, 0.1) 0%, rgba(243, 244, 246, 0) 70%);
         }
         
         /* Custom styles for the bar chart placeholder */
@@ -55,9 +48,6 @@
             transition: height 0.5s ease;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             border-radius: 4px;
-        }
-        .dark .bar-chart-bar {
-            background: linear-gradient(to top, #0ea5e9, #67e8f9);
         }
 
         /* Custom styles for the animated progress circle */
@@ -100,24 +90,21 @@
             transform: scale(0.9);
             transition: transform 0.3s ease, background-color 0.5s ease;
         }
-        .dark .modal-content {
-            background: #1f2937;
-        }
         .modal-content.show {
             transform: scale(1);
         }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-900 dark:bg-gray-950 dark:text-white transition-colors duration-500">
+<body class="bg-gray-100 text-gray-900">
 
     <!-- The canvas for the animated background -->
     <canvas id="electricity-canvas"></canvas>
-    <div id="gradient-overlay" class="gradient-overlay"></div>
+    <div class="gradient-overlay"></div>
 
     <div class="content-container min-h-screen flex flex-col p-4">
         
         <!-- Navigation Bar -->
-        <nav class="w-full max-w-7xl mx-auto p-4 md:p-6 bg-white bg-opacity-80 rounded-xl shadow-lg backdrop-blur-sm mb-8 dark:bg-gray-800 dark:bg-opacity-80 border border-gray-200 dark:border-gray-700 transition-colors duration-500">
+        <nav class="w-full max-w-7xl mx-auto p-4 md:p-6 bg-white bg-opacity-80 rounded-xl shadow-lg backdrop-blur-sm mb-8 border border-gray-200">
             <div class="flex flex-col md:flex-row items-center justify-between">
                 <!-- Logo / Site Title -->
                 <a href="#" class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500 hover:scale-105 transition-transform duration-300 mb-4 md:mb-0">
@@ -127,13 +114,8 @@
                 <!-- Nav Links -->
                 <div class="flex items-center flex-wrap justify-center gap-6 text-lg font-medium">
                     <!-- Nav links with data-page attribute for client-side navigation -->
-                    <a href="#" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-cyan-400 transition-colors duration-200" data-page="dashboard">Dashboard</a>
-                    <a href="#" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-cyan-400 transition-colors duration-200" data-page="settings">Settings</a>
-                    <a href="#" class="text-gray-700 hover:text-blue-600 dark:text-gray-300 dark:hover:text-cyan-400 transition-colors duration-200">Contact</a>
-                    <!-- Theme Toggle Button -->
-                    <button id="theme-toggle" class="p-2 rounded-full bg-gray-200 text-gray-900 shadow-md dark:bg-gray-700 dark:text-white">
-                        <i id="theme-icon" class="fas fa-moon"></i>
-                    </button>
+                    <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors duration-200" data-page="dashboard">Dashboard</a>
+                    <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors duration-200">Contact</a>
                 </div>
             </div>
         </nav>
@@ -144,17 +126,17 @@
         </main>
         
         <!-- Footer Section -->
-        <footer class="w-full mt-8 p-6 text-center bg-gray-200 dark:bg-gray-950 transition-colors duration-500">
-            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-gray-700 dark:text-gray-400 text-sm">
+        <footer class="w-full mt-8 p-6 text-center bg-gray-200">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-gray-700 text-sm">
                 <div class="mb-4 md:mb-0">
                     &copy; 2025 GridPay. All rights reserved.
                 </div>
                 
                 <!-- Footer Links -->
                 <div class="flex flex-wrap justify-center gap-6 font-medium">
-                    <a href="#" class="hover:text-blue-500 dark:hover:text-cyan-400 transition-colors duration-200">About Us</a>
-                    <a href="#" class="hover:text-blue-500 dark:hover:text-cyan-400 transition-colors duration-200">Contact</a>
-                    <a href="#" class="hover:text-blue-500 dark:hover:text-cyan-400 transition-colors duration-200">Privacy Policy</a>
+                    <a href="#" class="hover:text-blue-500 transition-colors duration-200">About Us</a>
+                    <a href="#" class="hover:text-blue-500 transition-colors duration-200">Contact</a>
+                    <a href="#" class="hover:text-blue-500 transition-colors duration-200">Privacy Policy</a>
                 </div>
             </div>
         </footer>
@@ -163,12 +145,12 @@
 
     <!-- Dynamic Modal -->
     <div id="dynamic-modal-overlay" class="modal-overlay">
-        <div id="dynamic-modal-content" class="modal-content text-center dark:text-white">
+        <div id="dynamic-modal-content" class="modal-content text-center">
             <div class="flex justify-center mb-4">
                 <i id="modal-icon" class="fas fa-check-circle text-green-500 text-5xl"></i>
             </div>
             <h3 id="modal-title" class="text-2xl font-bold mb-2"></h3>
-            <p id="modal-message" class="text-gray-700 dark:text-gray-300"></p>
+            <p id="modal-message" class="text-gray-700"></p>
             <button id="close-modal-btn" class="mt-6 bg-green-500 text-white font-bold py-2 px-6 rounded-full hover:bg-green-600 transition-colors">
                 OK
             </button>
@@ -177,19 +159,13 @@
 
 
     <script>
-        // JavaScript for the theme toggling, canvas animation, and dashboard functionality
+        // JavaScript for the canvas animation, and dashboard functionality
         window.onload = function() {
             const canvas = document.getElementById('electricity-canvas');
             const ctx = canvas.getContext('2d');
             let particles = [];
             const particleCount = 150; // Number of particles for the animation
             const mainContent = document.getElementById('main-content');
-
-            // Get elements for theme toggling
-            const html = document.documentElement;
-            const themeToggleBtn = document.getElementById('theme-toggle');
-            const themeIcon = document.getElementById('theme-icon');
-            const gradientOverlay = document.getElementById('gradient-overlay');
 
             // Modal elements
             const dynamicModalOverlay = document.getElementById('dynamic-modal-overlay');
@@ -205,58 +181,6 @@
             }
             window.addEventListener('resize', resizeCanvas);
             resizeCanvas();
-
-            // Function to update canvas colors based on theme
-            function updateCanvasColors() {
-                const isDarkMode = html.classList.contains('dark');
-                const particleColor = isDarkMode ? 'rgba(0, 191, 255, ' : 'rgba(0, 100, 200, ';
-                
-                // Re-initialize particles with the new color scheme
-                particles = [];
-                for (let i = 0; i < particleCount; i++) {
-                    particles.push(new Particle(particleColor));
-                }
-            }
-
-            // Function to toggle the theme
-            function toggleTheme() {
-                html.classList.toggle('dark');
-                const isDarkMode = html.classList.contains('dark');
-                
-                if (isDarkMode) {
-                    gradientOverlay.classList.remove('gradient-overlay-light');
-                    gradientOverlay.classList.add('gradient-overlay-dark');
-                    themeIcon.classList.remove('fa-sun');
-                    themeIcon.classList.add('fa-moon');
-                    localStorage.setItem('theme', 'dark');
-                } else {
-                    gradientOverlay.classList.remove('gradient-overlay-dark');
-                    gradientOverlay.classList.add('gradient-overlay-light');
-                    themeIcon.classList.remove('fa-moon');
-                    themeIcon.classList.add('fa-sun');
-                    localStorage.setItem('theme', 'light');
-                }
-                updateCanvasColors(); // Re-render the canvas with new colors
-            }
-
-            // Event listener for the theme toggle button
-            themeToggleBtn.addEventListener('click', toggleTheme);
-
-            // Set the initial theme based on local storage or default to dark
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'light') {
-                html.classList.remove('dark');
-                gradientOverlay.classList.remove('gradient-overlay-dark');
-                gradientOverlay.classList.add('gradient-overlay-light');
-                themeIcon.classList.remove('fa-moon');
-                themeIcon.classList.add('fa-sun');
-            } else { // Default to dark if no theme is saved or it's 'dark'
-                html.classList.add('dark');
-                gradientOverlay.classList.remove('gradient-overlay-light');
-                gradientOverlay.classList.add('gradient-overlay-dark');
-                themeIcon.classList.remove('fa-sun');
-                themeIcon.classList.add('fa-moon');
-            }
 
             // Particle class to manage each animated point
             class Particle {
@@ -301,14 +225,16 @@
             }
             
             // Set up initial particles
-            updateCanvasColors();
+            const particleColor = 'rgba(0, 100, 200, ';
+            for (let i = 0; i < particleCount; i++) {
+                particles.push(new Particle(particleColor));
+            }
 
             // Animation loop
             function animate() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 
-                const isDarkMode = html.classList.contains('dark');
-                const lineColor = isDarkMode ? `rgba(0, 191, 255,` : `rgba(0, 100, 200,`;
+                const lineColor = `rgba(0, 100, 200,`;
 
                 particles.forEach(p => {
                     p.draw();
@@ -338,44 +264,64 @@
             const dashboardContent = `
                 <div class="w-full max-w-7xl">
                     <!-- Welcome Section -->
-                    <div class="bg-white bg-opacity-70 rounded-3xl shadow-2xl backdrop-blur-md border border-gray-300 dark:bg-gray-800 dark:bg-opacity-70 dark:border-gray-700 transition-colors duration-500 p-8 md:p-12 mb-8">
-                        <h1 class="text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-400 dark:from-cyan-400 dark:to-blue-600">
+                    <div class="bg-white bg-opacity-70 rounded-3xl shadow-2xl backdrop-blur-md border border-gray-300 p-8 md:p-12 mb-8">
+                        <h1 class="text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-400">
                             Hello, [User Name]
                         </h1>
-                        <p class="mt-4 text-lg md:text-xl text-gray-700 dark:text-gray-300">
+                        <p class="mt-4 text-lg md:text-xl text-gray-700">
                             Welcome back! Here's an overview of your smart metering account.
                         </p>
                     </div>
 
                     <!-- Metrics and Summary Cards -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                         <!-- Card 1: Remaining Balance -->
-                        <div class="p-6 bg-white bg-opacity-80 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-200 dark:bg-gray-800 dark:bg-opacity-80 dark:border-gray-700 transition-colors duration-500">
+                        <div class="p-6 bg-white bg-opacity-80 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-200">
                             <div class="flex items-center space-x-4">
-                                <i class="fas fa-wallet text-3xl text-blue-500 dark:text-cyan-400"></i>
+                                <i class="fas fa-wallet text-3xl text-blue-500"></i>
                                 <div>
-                                    <p class="text-xl font-bold text-gray-800 dark:text-white">R150.00</p>
-                                    <p class="text-sm text-gray-500 dark:text-gray-400">Remaining Balance</p>
+                                    <p class="text-xl font-bold text-gray-800">R150.00</p>
+                                    <p class="text-sm text-gray-500">Remaining Balance</p>
                                 </div>
                             </div>
                         </div>
                         <!-- Card 2: Today's Consumption -->
-                        <div class="p-6 bg-white bg-opacity-80 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-200 dark:bg-gray-800 dark:bg-opacity-80 dark:border-gray-700 transition-colors duration-500">
+                        <div class="p-6 bg-white bg-opacity-80 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-200">
                             <div class="flex items-center space-x-4">
-                                <i class="fas fa-bolt text-3xl text-yellow-500 dark:text-yellow-300"></i>
+                                <i class="fas fa-bolt text-3xl text-yellow-500"></i>
                                 <div>
-                                    <p class="text-xl font-bold text-gray-800 dark:text-white">12.5 kWh</p>
-                                    <p class="text-sm text-gray-500 dark:text-gray-400">Today's Consumption</p>
+                                    <p class="text-xl font-bold text-gray-800">12.5 kWh</p>
+                                    <p class="text-sm text-gray-500">Today's Consumption</p>
                                 </div>
                             </div>
                         </div>
                         <!-- Card 3: Energy Saved -->
-                        <div class="p-6 bg-white bg-opacity-80 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-200 dark:bg-gray-800 dark:bg-opacity-80 dark:border-gray-700 transition-colors duration-500">
+                        <div class="p-6 bg-white bg-opacity-80 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-200">
                             <div class="flex items-center space-x-4">
-                                <i class="fas fa-leaf text-3xl text-green-500 dark:text-green-400"></i>
+                                <i class="fas fa-leaf text-3xl text-green-500"></i>
                                 <div>
-                                    <p class="text-xl font-bold text-gray-800 dark:text-white">15%</p>
-                                    <p class="text-sm text-gray-500 dark:text-gray-400">Energy Saved this Month</p>
+                                    <p class="text-xl font-bold text-gray-800">15%</p>
+                                    <p class="text-sm text-gray-500">Energy Saved this Month</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card 4: Load Electricity -->
+                        <div data-page="topup" class="p-6 bg-white bg-opacity-80 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors duration-200">
+                            <div class="flex items-center space-x-4">
+                                <i class="fas fa-credit-card text-3xl text-purple-500"></i>
+                                <div>
+                                    <p class="text-xl font-bold text-gray-800">Load Electricity</p>
+                                    <p class="text-sm text-gray-500">Top-up your balance</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Card 5: Settings -->
+                        <div data-page="settings" class="p-6 bg-white bg-opacity-80 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors duration-200">
+                            <div class="flex items-center space-x-4">
+                                <i class="fas fa-cog text-3xl text-gray-600"></i>
+                                <div>
+                                    <p class="text-xl font-bold text-gray-800">Settings</p>
+                                    <p class="text-sm text-gray-500">Manage account</p>
                                 </div>
                             </div>
                         </div>
@@ -384,13 +330,13 @@
                     <!-- Consumption Chart and Transaction History -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <!-- Consumption Chart Section -->
-                        <div class="p-8 bg-white bg-opacity-80 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-200 dark:bg-gray-800 dark:bg-opacity-80 dark:border-gray-700 transition-colors duration-500">
+                        <div class="p-8 bg-white bg-opacity-80 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-200">
                             <div class="flex justify-between items-center mb-4">
-                                <h2 class="text-2xl font-bold text-gray-800 dark:text-white">Weekly Consumption</h2>
-                                <span class="text-sm text-gray-500 dark:text-gray-400">Past 7 Days</span>
+                                <h2 class="text-2xl font-bold text-gray-800">Weekly Consumption</h2>
+                                <span class="text-sm text-gray-500">Past 7 Days</span>
                             </div>
                             <!-- Placeholder for a bar chart -->
-                            <div class="h-64 flex items-end justify-around p-4 rounded-lg bg-gray-100 dark:bg-gray-900 transition-colors duration-500">
+                            <div class="h-64 flex items-end justify-around p-4 rounded-lg bg-gray-100">
                                 <div class="bar-chart-bar h-[75%]"></div>
                                 <div class="bar-chart-bar h-[85%]"></div>
                                 <div class="bar-chart-bar h-[50%]"></div>
@@ -399,7 +345,7 @@
                                 <div class="bar-chart-bar h-[70%]"></div>
                                 <div class="bar-chart-bar h-[40%]"></div>
                             </div>
-                            <div class="flex justify-around mt-2 text-xs text-gray-500 dark:text-gray-400">
+                            <div class="flex justify-around mt-2 text-xs text-gray-500">
                                 <span>Mon</span>
                                 <span>Tue</span>
                                 <span>Wed</span>
@@ -411,10 +357,10 @@
                         </div>
 
                         <!-- Recent Transactions Section -->
-                        <div class="p-8 bg-white bg-opacity-80 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-200 dark:bg-gray-800 dark:bg-opacity-80 dark:border-gray-700 transition-colors duration-500">
-                            <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-4">Recent Transactions</h2>
+                        <div class="p-8 bg-white bg-opacity-80 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-200">
+                            <h2 class="text-2xl font-bold text-gray-800 mb-4">Recent Transactions</h2>
                             <ul class="space-y-4">
-                                <li class="flex justify-between items-center border-b pb-2 border-gray-200 dark:border-gray-700">
+                                <li class="flex justify-between items-center border-b pb-2 border-gray-200">
                                     <div class="flex items-center space-x-3">
                                         <i class="fas fa-arrow-down text-lg text-red-500"></i>
                                         <div>
@@ -426,9 +372,9 @@
                                         <p class="font-medium text-red-500">-R100.00</p>
                                         <p class="text-xs text-gray-500">2025-08-05</p>
                                     </div>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400">Balance: R150.00</p>
+                                    <p class="text-xs text-gray-500">Balance: R150.00</p>
                                 </li>
-                                <li class="flex justify-between items-center border-b pb-2 border-gray-200 dark:border-gray-700">
+                                <li class="flex justify-between items-center border-b pb-2 border-gray-200">
                                     <div class="flex items-center space-x-3">
                                         <i class="fas fa-arrow-up text-lg text-green-500"></i>
                                         <div>
@@ -440,9 +386,9 @@
                                         <p class="font-medium text-green-500">+R250.00</p>
                                         <p class="text-xs text-gray-500">2025-08-01</p>
                                     </div>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400">Balance: R250.00</p>
+                                    <p class="text-xs text-gray-500">Balance: R250.00</p>
                                 </li>
-                                <li class="flex justify-between items-center border-b pb-2 border-gray-200 dark:border-gray-700">
+                                <li class="flex justify-between items-center border-b pb-2 border-gray-200">
                                     <div class="flex items-center space-x-3">
                                         <i class="fas fa-arrow-down text-lg text-red-500"></i>
                                         <div>
@@ -454,7 +400,7 @@
                                         <p class="font-medium text-red-500">-R250.00</p>
                                         <p class="text-xs text-gray-500">2025-07-28</p>
                                     </div>
-                                    <p class="text-xs text-gray-500 dark:text-gray-400">Balance: R0.00</p>
+                                    <p class="text-xs text-gray-500">Balance: R0.00</p>
                                 </li>
                             </ul>
                         </div>
@@ -462,186 +408,138 @@
                 </div>
             `;
 
-            const settingsContent = `
-                <div class="w-full max-w-2xl mx-auto">
-                    <div class="p-8 bg-white bg-opacity-70 rounded-3xl shadow-2xl backdrop-blur-md border border-gray-300 dark:bg-gray-800 dark:bg-opacity-70 dark:border-gray-700 transition-colors duration-500">
-                        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800 dark:text-white mb-6">Settings</h1>
-                        <p class="text-lg text-gray-700 dark:text-gray-300 mb-8">Manage your account preferences and security settings here.</p>
-                        
-                        <!-- Load Electricity Section -->
-                        <div class="bg-gray-100 dark:bg-gray-900 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 mb-8">
-                            <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Load Electricity</h2>
-                            <form id="load-electricity-form" class="space-y-4">
-                                <div>
-                                    <label for="load-meter-number" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Meter Number</label>
-                                    <input type="text" id="load-meter-number" name="meter-number" required placeholder="e.g., 123456789" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                                </div>
-                                <div>
-                                    <label for="load-amount" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Amount (Rands)</label>
-                                    <input type="number" id="load-amount" name="amount" required min="1" placeholder="e.g., 50" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                                </div>
-                                <button type="submit" id="load-electricity-btn" class="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
-                                    Load Electricity
-                                </button>
-                            </form>
+            const topUpContent = `
+                <div class="w-full max-w-2xl mx-auto p-8 bg-white bg-opacity-70 rounded-3xl shadow-2xl backdrop-blur-md border border-gray-300">
+                    <h1 class="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-400 mb-6">Load Electricity</h1>
+                    <p class="text-lg text-gray-700 mb-6">Choose an amount to top up your account, or enter a custom value.</p>
+                    
+                    <form id="top-up-form">
+                        <div class="mb-4">
+                            <label for="meter-number-input" class="block text-sm font-medium text-gray-700 mb-2">Meter Number</label>
+                            <input type="text" id="meter-number-input" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-200 cursor-not-allowed" value="2345-6789-1234" disabled>
+                        </div>
+                        <div class="mb-6 flex flex-wrap gap-4 justify-center md:justify-start">
+                            <button type="button" class="amount-btn bg-white hover:bg-blue-500 hover:text-white border border-gray-300 text-gray-800 font-bold py-3 px-6 rounded-full transition-colors duration-200 shadow" data-amount="50">R50</button>
+                            <button type="button" class="amount-btn bg-white hover:bg-blue-500 hover:text-white border border-gray-300 text-gray-800 font-bold py-3 px-6 rounded-full transition-colors duration-200 shadow" data-amount="100">R100</button>
+                            <button type="button" class="amount-btn bg-white hover:bg-blue-500 hover:text-white border border-gray-300 text-gray-800 font-bold py-3 px-6 rounded-full transition-colors duration-200 shadow" data-amount="200">R200</button>
                         </div>
                         
-                        <!-- Change Password Section -->
-                        <div class="bg-gray-100 dark:bg-gray-900 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 mb-8">
-                            <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Change Password</h2>
-                            <form id="change-password-form" class="space-y-4">
-                                <div>
-                                    <label for="current-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Current Password</label>
-                                    <input type="password" id="current-password" name="current-password" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                                </div>
-                                <div>
-                                    <label for="new-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">New Password</label>
-                                    <input type="password" id="new-password" name="new-password" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                                </div>
-                                <div>
-                                    <label for="confirm-password" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Confirm New Password</label>
-                                    <input type="password" id="confirm-password" name="confirm-password" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                                </div>
-                                <button type="submit" class="w-full bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
-                                    Update Password
-                                </button>
-                                <p id="password-error" class="text-sm text-red-500 mt-2 hidden">Passwords do not match.</p>
-                            </form>
+                        <div class="mb-6">
+                            <label for="amount-input" class="block text-sm font-medium text-gray-700 mb-2">Custom Amount (R)</label>
+                            <input type="number" id="amount-input" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="e.g., 75.00" min="10" step="0.01" required>
                         </div>
 
-                        <!-- Meter Readings Section -->
-                        <div class="bg-gray-100 dark:bg-gray-900 p-6 rounded-2xl border border-gray-200 dark:border-gray-700">
-                            <h2 class="text-xl font-bold text-gray-800 dark:text-white mb-4">Check Meter Readings</h2>
-                            <form id="meter-readings-form" class="space-y-4">
-                                <div>
-                                    <label for="meter-number" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Meter Number</label>
-                                    <input type="text" id="meter-number" name="meter-number" required placeholder="e.g., 123456789" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                                </div>
-                                <button type="submit" id="get-readings-btn" class="w-full bg-gradient-to-r from-green-500 to-teal-500 text-white font-bold py-2 px-4 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
-                                    Get Readings
-                                </button>
-                            </form>
-                            <!-- Container for the meter reading results -->
-                            <div id="meter-readings-result" class="mt-6 p-4 bg-white dark:bg-gray-800 rounded-lg shadow hidden">
-                                <h3 class="text-lg font-semibold text-gray-800 dark:text-white mb-2">Reading for Meter: <span id="result-meter-number" class="text-blue-600 dark:text-cyan-400"></span></h3>
-                                <div class="space-y-2">
-                                    <p><span class="font-medium">Current Consumption:</span> <span id="result-consumption"></span></p>
-                                    <p><span class="font-medium">Last Reading Date:</span> <span id="result-date"></span></p>
-                                    <p><span class="font-medium">Status:</span> <span id="result-status"></span></p>
-                                </div>
-                            </div>
+                        <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-xl hover:bg-blue-700 transition-colors duration-200 shadow-lg">
+                            Load Now
+                        </button>
+                    </form>
+                </div>
+            `;
+            
+            const settingsContent = `
+                <div class="w-full max-w-2xl mx-auto p-8 bg-white bg-opacity-70 rounded-3xl shadow-2xl backdrop-blur-md border border-gray-300">
+                    <h1 class="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-400 mb-6">Account Settings</h1>
+                    <p class="text-lg text-gray-700 mb-6">Update your personal and account information below.</p>
+                    
+                    <form id="settings-form">
+                        <div class="mb-4">
+                            <label for="user-name" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                            <input type="text" id="user-name" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="[User Name]" required>
                         </div>
-                    </div>
+                        <div class="mb-4">
+                            <label for="user-email" class="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                            <input type="email" id="user-email" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-200 cursor-not-allowed" value="[user@example.com]" disabled>
+                        </div>
+                        <div class="mb-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <label class="block text-sm font-medium text-gray-700">Password</label>
+                                <button type="button" class="text-blue-500 hover:underline text-sm font-medium">Change Password</button>
+                            </div>
+                            <input type="password" id="user-password" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-200 cursor-not-allowed" value="••••••••" disabled>
+                        </div>
+                        <div class="mb-6">
+                            <label for="meter-id" class="block text-sm font-medium text-gray-700 mb-2">Meter ID</label>
+                            <input type="text" id="meter-id" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-200 cursor-not-allowed" value="2345-6789-1234" disabled>
+                        </div>
+                        
+                        <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-xl hover:bg-blue-700 transition-colors duration-200 shadow-lg">
+                            Save Changes
+                        </button>
+                    </form>
                 </div>
             `;
 
             // Function to render the correct page content
             function renderPage(page) {
                 // Remove 'font-bold' from all nav links
-                document.querySelectorAll('nav a[data-page]').forEach(l => l.classList.remove('font-bold', 'text-blue-600', 'dark:text-cyan-400'));
+                document.querySelectorAll('nav a[data-page]').forEach(l => l.classList.remove('font-bold', 'text-blue-600'));
                 
-                // Add 'font-bold' to the active link
+                // Add 'font-bold' to the active link (if it exists)
                 const activeLink = document.querySelector(`nav a[data-page="${page}"]`);
                 if (activeLink) {
-                    activeLink.classList.add('font-bold', 'text-blue-600', 'dark:text-cyan-400');
+                    activeLink.classList.add('font-bold', 'text-blue-600');
                 }
 
                 switch(page) {
-                    case 'settings':
-                        mainContent.innerHTML = settingsContent;
-                        // Attach event listener for the password form
-                        const passwordForm = document.getElementById('change-password-form');
-                        const passwordError = document.getElementById('password-error');
-                        passwordForm.addEventListener('submit', function(event) {
+                    case 'topup':
+                        mainContent.innerHTML = topUpContent;
+                        // Add event listeners for the new form
+                        const topUpForm = document.getElementById('top-up-form');
+                        const meterNumberInput = document.getElementById('meter-number-input'); // Get new meter number field
+                        const amountInput = document.getElementById('amount-input');
+                        const amountButtons = document.querySelectorAll('.amount-btn');
+
+                        // Pre-set amount buttons
+                        amountButtons.forEach(button => {
+                            button.addEventListener('click', () => {
+                                amountInput.value = button.dataset.amount;
+                            });
+                        });
+                        
+                        // Form submission handler
+                        topUpForm.addEventListener('submit', (event) => {
                             event.preventDefault();
-                            const newPassword = document.getElementById('new-password').value;
-                            const confirmPassword = document.getElementById('confirm-password').value;
-                            
-                            if (newPassword !== confirmPassword) {
-                                passwordError.classList.remove('hidden');
+                            const amount = amountInput.value;
+                            const meterNumber = meterNumberInput.value; // Get meter number value
+                            if (amount && amount > 0) {
+                                showModal('Success!', `Successfully requested a top-up of R${amount} for meter number ${meterNumber}. Your transaction is being processed.`);
                             } else {
-                                passwordError.classList.add('hidden');
-                                // Simulate a successful password change
-                                showModal('Password Changed Successfully!', 'Your password has been updated. Please remember your new password.');
-                                passwordForm.reset();
+                                showModal('Error', 'Please enter a valid amount to top up.', 'fas fa-exclamation-circle text-red-500');
                             }
                         });
-
-                        // Attach event listener for the meter readings form
-                        const meterReadingsForm = document.getElementById('meter-readings-form');
-                        meterReadingsForm.addEventListener('submit', function(event) {
+                        break;
+                    case 'settings':
+                        mainContent.innerHTML = settingsContent;
+                        // Add event listeners for the new settings form
+                        const settingsForm = document.getElementById('settings-form');
+                        settingsForm.addEventListener('submit', (event) => {
                             event.preventDefault();
-                            const meterNumber = document.getElementById('meter-number').value;
-                            getMeterReadings(meterNumber);
+                            // In a real app, you would send this data to a server.
+                            const name = document.getElementById('user-name').value;
+                            showModal('Settings Saved!', `Your account information has been updated.`, 'fas fa-check-circle text-green-500');
                         });
-
-                        // Attach event listener for the load electricity form
-                        const loadElectricityForm = document.getElementById('load-electricity-form');
-                        loadElectricityForm.addEventListener('submit', function(event) {
-                            event.preventDefault();
-                            const meterNumber = document.getElementById('load-meter-number').value;
-                            const amount = document.getElementById('load-amount').value;
-                            loadElectricity(meterNumber, amount);
-                        });
-
                         break;
                     case 'dashboard':
                     default:
                         mainContent.innerHTML = dashboardContent;
+                        // Since the links are now cards, we need to add event listeners here
+                        const settingsCard = mainContent.querySelector('[data-page="settings"]');
+                        if (settingsCard) {
+                            settingsCard.addEventListener('click', () => renderPage('settings'));
+                        }
+                        const topUpCard = mainContent.querySelector('[data-page="topup"]');
+                        if (topUpCard) {
+                            topUpCard.addEventListener('click', () => renderPage('topup'));
+                        }
                         break;
                 }
             }
-
-            // Function to get simulated meter readings
-            function getMeterReadings(meterNumber) {
-                const resultDiv = document.getElementById('meter-readings-result');
-                const meterNumberSpan = document.getElementById('result-meter-number');
-                const consumptionSpan = document.getElementById('result-consumption');
-                const dateSpan = document.getElementById('result-date');
-                const statusSpan = document.getElementById('result-status');
-
-                // Simulate an API call delay
-                setTimeout(() => {
-                    // Placeholder data for demonstration
-                    const consumption = (Math.random() * 500).toFixed(2) + ' kWh';
-                    const date = new Date().toLocaleDateString();
-                    const status = 'Active';
-
-                    meterNumberSpan.textContent = meterNumber;
-                    consumptionSpan.textContent = consumption;
-                    dateSpan.textContent = date;
-                    statusSpan.textContent = status;
-
-                    resultDiv.classList.remove('hidden');
-                }, 1000);
-            }
             
-            // Function to simulate loading electricity
-            function loadElectricity(meterNumber, amount) {
-                // Show a loading state or a toast message here if you want
-                
-                // Simulate a successful API call delay
-                setTimeout(() => {
-                    const message = `Successfully loaded R${amount}.00 of electricity to meter number ${meterNumber}. A token will be sent to you shortly.`;
-                    showModal('Electricity Loaded!', message);
-                    // Reset the form after a successful load
-                    document.getElementById('load-electricity-form').reset();
-                }, 1500);
-            }
-
-
-            // Client-side routing for nav links
-            document.querySelectorAll('nav a[data-page]').forEach(link => {
-                link.addEventListener('click', (event) => {
-                    event.preventDefault();
-                    renderPage(event.target.dataset.page);
-                });
-            });
-
             // Show the modal with dynamic content
-            function showModal(title, message) {
+            function showModal(title, message, iconClass = 'fas fa-check-circle text-green-500') {
                 modalTitle.textContent = title;
                 modalMessage.textContent = message;
+                document.getElementById('modal-icon').className = iconClass + ' text-5xl';
                 dynamicModalOverlay.classList.add('active');
                 setTimeout(() => {
                     dynamicModalContent.classList.add('show');
@@ -659,6 +557,14 @@
             // Close modal button event listener
             closeModalBtn.addEventListener('click', hideModal);
             
+            // Client-side routing for nav links
+            document.querySelectorAll('nav a[data-page]').forEach(link => {
+                link.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    renderPage(event.target.dataset.page);
+                });
+            });
+
             // Render the initial page (dashboard)
             renderPage('dashboard');
         };
