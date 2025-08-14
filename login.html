@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login and Register</title>
-    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
@@ -44,10 +43,8 @@
     <div class="min-h-screen flex items-center justify-center p-4">
         <div class="bg-white text-gray-900 rounded-2xl shadow-xl p-8 max-w-md w-full">
 
-            <!-- Message Box -->
             <div id="message-box" class="mb-4 hidden p-3 rounded-xl text-center font-medium"></div>
 
-            <!-- Login Page Content -->
             <div id="login-page" class="space-y-4">
                 <h1 class="text-3xl font-bold text-center mb-6 text-eskom-blue">Login</h1>
                 <form id="login-form" class="space-y-4">
@@ -60,7 +57,6 @@
                         <div class="relative mt-1">
                             <input type="password" id="login-password" class="block w-full pr-10 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-eskom-blue focus:border-transparent transition" required>
                             <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500" onclick="togglePasswordVisibility('login-password', this)">
-                                <!-- Eye Icon SVG -->
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.575 3.01 9.963 7.172.03.1.03.2 0 .33-.004.095-.018.19-.04.282A10.022 10.022 0 0112 19.5c-4.638 0-8.575-3.01-9.963-7.172z" />
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -78,7 +74,6 @@
                 </div>
             </div>
 
-            <!-- Register Page Content (hidden by default) -->
             <div id="register-page" class="space-y-4 hidden">
                 <h1 class="text-3xl font-bold text-center mb-6 text-eskom-blue">Register</h1>
                 <form id="register-form" class="space-y-4">
@@ -95,7 +90,6 @@
                         <div class="relative mt-1">
                             <input type="password" id="register-password" class="block w-full pr-10 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-eskom-blue focus:border-transparent transition" required>
                             <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500" onclick="togglePasswordVisibility('register-password', this)">
-                                <!-- Eye Icon SVG -->
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.575 3.01 9.963 7.172.03.1.03.2 0 .33-.004.095-.018.19-.04.282A10.022 10.022 0 0112 19.5c-4.638 0-8.575-3.01-9.963-7.172z" />
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -114,12 +108,19 @@
                         <div class="relative mt-1">
                             <input type="password" id="register-confirm-password" class="block w-full pr-10 px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-eskom-blue focus:border-transparent transition" required>
                             <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500" onclick="togglePasswordVisibility('register-confirm-password', this)">
-                                <!-- Eye Icon SVG -->
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.575 3.01 9.963 7.172.03.1.03.2 0 .33-.004.095-.018.19-.04.282A10.022 10.022 0 0112 19.5c-4.638 0-8.575-3.01-9.963-7.172z" />
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                                 </svg>
                             </button>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex items-center mt-4">
+                            <input type="checkbox" id="is-business-owner" class="h-4 w-4 text-eskom-blue border-gray-300 rounded focus:ring-eskom-blue">
+                            <label for="is-business-owner" class="ml-2 block text-sm text-gray-900">
+                                I am a business owner
+                            </label>
                         </div>
                     </div>
                     <button type="submit" class="w-full bg-eskom-blue text-white font-semibold py-2 px-4 rounded-lg hover:bg-eskom-blue-dark focus:outline-none focus:ring-2 focus:ring-eskom-blue focus:ring-offset-2 focus:ring-offset-white transition">
@@ -132,7 +133,6 @@
                 </div>
             </div>
 
-            <!-- Logged-in Dashboard (hidden by default) -->
             <div id="dashboard" class="text-center hidden">
                 <h2 class="text-2xl font-bold mb-4">Welcome!</h2>
                 <p id="user-info" class="mb-6"></p>
@@ -187,6 +187,7 @@
         const confirmPasswordInput = document.getElementById('register-confirm-password');
         const strengthBar = document.getElementById('password-strength-bar');
         const strengthText = document.getElementById('password-strength-text');
+        const isBusinessOwnerCheckbox = document.getElementById('is-business-owner');
         
         // Function to show a message
         const showMessage = (message, type) => {
@@ -206,27 +207,15 @@
         // Function to toggle password visibility
         window.togglePasswordVisibility = (passwordInputId, button) => {
             const passwordInput = document.getElementById(passwordInputId);
+            const eyeOpenSVG = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.575 3.01 9.963 7.172.03.1.03.2 0 .33-.004.095-.018.19-.04.282A10.022 10.022 0 0112 19.5c-4.638 0-8.575-3.01-9.963-7.172z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>`;
+            const eyeClosedSVG = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.41a4.995 4.995 0 0112.02 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5s-7.5 7.5-7.5 7.5S12 19.5 12 19.5s7.5-7.5 7.5-7.5S12 4.5 12 4.5zM12 15a3 3 0 100-6 3 3 0 000 6z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.575 3.01 9.963 7.172.03.1.03.2 0 .33-.004.095-.018.19-.04.282A10.022 10.022 0 0112 19.5c-4.638 0-8.575-3.01-9.963-7.172z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.41a4.995 4.995 0 0112.02 0z" /></svg>`;
+            
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
-                // Change icon to 'eye-slash' or a similar closed eye
-                button.innerHTML = `
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.41a4.995 4.995 0 0112.02 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5s-7.5 7.5-7.5 7.5S12 19.5 12 19.5s7.5-7.5 7.5-7.5S12 4.5 12 4.5zM12 15a3 3 0 100-6 3 3 0 000 6z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.575 3.01 9.963 7.172.03.1.03.2 0 .33-.004.095-.018.19-.04.282A10.022 10.022 0 0112 19.5c-4.638 0-8.575-3.01-9.963-7.172z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.41a4.995 4.995 0 0112.02 0z" />
-                    </svg>
-                `;
+                button.innerHTML = eyeClosedSVG;
             } else {
                 passwordInput.type = 'password';
-                // Change icon back to 'eye'
-                button.innerHTML = `
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.575 3.01 9.963 7.172.03.1.03.2 0 .33-.004.095-.018.19-.04.282A10.022 10.022 0 0112 19.5c-4.638 0-8.575-3.01-9.963-7.172z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                `;
+                button.innerHTML = eyeOpenSVG;
             }
         };
 
@@ -312,6 +301,7 @@
                 const email = document.getElementById('register-email').value;
                 const password = document.getElementById('register-password').value;
                 const confirmPassword = document.getElementById('register-confirm-password').value;
+                const isBusinessOwner = isBusinessOwnerCheckbox.checked;
 
                 if (password !== confirmPassword) {
                     showMessage('Passwords do not match.', 'error');
@@ -319,7 +309,9 @@
                 }
 
                 try {
-                    await createUserWithEmailAndPassword(auth, email, password);
+                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                    // This is where you would normally save the `isBusinessOwner` status to a database
+                    // For this example, we'll simply acknowledge the choice.
                     showMessage('Registration successful! You can now log in.', 'success');
                     registerForm.reset();
                     checkPasswordStrength(''); // Reset the strength bar
@@ -375,7 +367,19 @@
                     loginPage.classList.add('hidden');
                     registerPage.classList.add('hidden');
                     dashboard.classList.remove('hidden');
-                    userInfo.textContent = `You are logged in with user ID: ${user.uid}`;
+
+                    // Simulate a business owner login based on a specific email
+                    const isBusinessOwner = user.email === 'business@example.com';
+                    
+                    if (isBusinessOwner) {
+                        userInfo.innerHTML = `
+                            <p class="text-xl font-semibold">Welcome, Business Owner!</p>
+                            <p class="text-sm text-gray-500 mt-2">You are logged in with user ID: ${user.uid}</p>
+                            <p class="mt-4">You have access to business management tools and settings.</p>
+                        `;
+                    } else {
+                        userInfo.textContent = `You are logged in with user ID: ${user.uid}`;
+                    }
                 } else {
                     // User is signed out
                     dashboard.classList.add('hidden');
