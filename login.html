@@ -63,6 +63,9 @@
                                 </svg>
                             </button>
                         </div>
+                        <div class="flex justify-end text-sm mt-1">
+                            <a href="#" id="forgot-password-link" class="text-eskom-blue hover:text-eskom-blue-dark font-medium transition">Forgot Password?</a>
+                        </div>
                     </div>
                     <button type="submit" class="w-full bg-eskom-blue text-white font-semibold py-2 px-4 rounded-lg hover:bg-eskom-blue-dark focus:outline-none focus:ring-2 focus:ring-eskom-blue focus:ring-offset-2 focus:ring-offset-white transition">
                         Login
@@ -115,14 +118,43 @@
                             </button>
                         </div>
                     </div>
+                    
                     <div>
-                        <div class="flex items-center mt-4">
-                            <input type="checkbox" id="is-business-owner" class="h-4 w-4 text-eskom-blue border-gray-300 rounded focus:ring-eskom-blue">
-                            <label for="is-business-owner" class="ml-2 block text-sm text-gray-900">
-                                I am a business owner
-                            </label>
-                        </div>
+                        <label for="user-type" class="block text-sm font-medium text-gray-700">User Type</label>
+                        <select id="user-type" class="mt-1 block w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-eskom-blue focus:border-transparent transition" required>
+                            <option value="consumer">Individual</option>
+                            <option value="business">Business</option>
+                        </select>
                     </div>
+
+                    <div id="business-details-container" class="space-y-4 hidden">
+                        <hr class="my-4 border-gray-300">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-2xl font-bold text-eskom-blue">Business Details</h2>
+                            <button type="button" id="add-business-btn" class="bg-green-500 text-white p-2 rounded-full hover:bg-green-600 transition">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                                </svg>
+                            </button>
+                        </div>
+                        
+                        <div class="business-form space-y-2 border-l-4 border-eskom-blue pl-4 py-2">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Business Name</label>
+                                <input type="text" name="business-name" class="mt-1 block w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-eskom-blue focus:border-transparent transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Business Address</label>
+                                <input type="text" name="business-address" class="mt-1 block w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-eskom-blue focus:border-transparent transition">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700">Business Phone Number</label>
+                                <input type="tel" name="business-phone" class="mt-1 block w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-eskom-blue focus:border-transparent transition">
+                            </div>
+                        </div>
+
+                    </div>
+
                     <button type="submit" class="w-full bg-eskom-blue text-white font-semibold py-2 px-4 rounded-lg hover:bg-eskom-blue-dark focus:outline-none focus:ring-2 focus:ring-eskom-blue focus:ring-offset-2 focus:ring-offset-white transition">
                         Register
                     </button>
@@ -132,261 +164,347 @@
                     <a href="#login" id="to-login-link" class="text-eskom-blue hover:text-eskom-blue-dark font-medium transition ml-1">Login here.</a>
                 </div>
             </div>
-
-            <div id="dashboard" class="text-center hidden">
-                <h2 class="text-2xl font-bold mb-4">Welcome!</h2>
-                <p id="user-info" class="mb-6"></p>
-                <button id="sign-out-btn" class="w-full bg-red-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 focus:ring-offset-white transition">
-                    Sign Out
-                </button>
-            </div>
-
         </div>
     </div>
 
-    <script type="module">
-        // Import the necessary Firebase functions
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        
-        // Firebase configuration from global variables
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+    <div id="password-reset-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <h3 class="text-xl font-bold mb-4 text-eskom-blue">Reset Password</h3>
+            <p class="text-gray-700 text-sm mb-4">Enter your email address below and we'll send you a link to reset your password.</p>
+            <form id="password-reset-form" class="space-y-4">
+                <div>
+                    <label for="reset-email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                    <input type="email" id="reset-email" class="mt-1 block w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-eskom-blue focus:border-transparent transition" required>
+                </div>
+                <div class="flex justify-between">
+                    <button type="button" id="close-reset-modal" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition">
+                        Cancel
+                    </button>
+                    <button type="submit" class="px-4 py-2 bg-eskom-blue text-white font-semibold rounded-lg hover:bg-eskom-blue-dark focus:outline-none focus:ring-2 focus:ring-eskom-blue focus:ring-offset-2 transition">
+                        Send Reset Link
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+    <script>
+        // Your Firebase config object
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
 
         // Initialize Firebase
-        let app;
-        let auth;
+        firebase.initializeApp(firebaseConfig);
 
-        if (Object.keys(firebaseConfig).length > 0) {
-            app = initializeApp(firebaseConfig);
-            auth = getAuth(app);
-            // Sign in with custom token if available
-            (async () => {
-                try {
-                    if (initialAuthToken) {
-                        await signInWithCustomToken(auth, initialAuthToken);
-                    }
-                } catch (error) {
-                    console.error("Error signing in with custom token:", error);
-                }
-            })();
-        } else {
-            console.error("Firebase config is missing. The app will not be able to authenticate.");
-        }
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
-        // Get references to all the elements
+        // DOM elements
         const loginPage = document.getElementById('login-page');
         const registerPage = document.getElementById('register-page');
-        const dashboard = document.getElementById('dashboard');
+        const toRegisterLink = document.getElementById('to-register-link');
+        const toLoginLink = document.getElementById('to-login-link');
         const loginForm = document.getElementById('login-form');
         const registerForm = document.getElementById('register-form');
         const messageBox = document.getElementById('message-box');
-        const signOutBtn = document.getElementById('sign-out-btn');
-        const userInfo = document.getElementById('user-info');
-        const passwordInput = document.getElementById('register-password');
-        const confirmPasswordInput = document.getElementById('register-confirm-password');
-        const strengthBar = document.getElementById('password-strength-bar');
-        const strengthText = document.getElementById('password-strength-text');
-        const isBusinessOwnerCheckbox = document.getElementById('is-business-owner');
+        const userTypeSelect = document.getElementById('user-type');
+        const businessDetailsContainer = document.getElementById('business-details-container');
+        const addBusinessBtn = document.getElementById('add-business-btn');
+        const registerPasswordInput = document.getElementById('register-password');
+        const passwordStrengthBar = document.getElementById('password-strength-bar');
+        const passwordStrengthText = document.getElementById('password-strength-text');
         
-        // Function to show a message
-        const showMessage = (message, type) => {
+        // New DOM elements for forgot password
+        const forgotPasswordLink = document.getElementById('forgot-password-link');
+        const passwordResetModal = document.getElementById('password-reset-modal');
+        const closeResetModalBtn = document.getElementById('close-reset-modal');
+        const passwordResetForm = document.getElementById('password-reset-form');
+
+        // Function to show the message box
+        function showMessage(message, type) {
             messageBox.textContent = message;
-            messageBox.className = 'mb-4 p-3 rounded-xl text-center font-medium'; // Reset classes
+            messageBox.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800');
             if (type === 'success') {
-                messageBox.classList.add('bg-green-600', 'text-white');
+                messageBox.classList.add('bg-green-100', 'text-green-800');
             } else if (type === 'error') {
-                messageBox.classList.add('bg-red-600', 'text-white');
+                messageBox.classList.add('bg-red-100', 'text-red-800');
             }
-            messageBox.classList.remove('hidden');
-            setTimeout(() => {
-                messageBox.classList.add('hidden');
-            }, 3000);
-        };
+        }
 
         // Function to toggle password visibility
-        window.togglePasswordVisibility = (passwordInputId, button) => {
-            const passwordInput = document.getElementById(passwordInputId);
-            const eyeOpenSVG = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.575 3.01 9.963 7.172.03.1.03.2 0 .33-.004.095-.018.19-.04.282A10.022 10.022 0 0112 19.5c-4.638 0-8.575-3.01-9.963-7.172z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>`;
-            const eyeClosedSVG = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.41a4.995 4.995 0 0112.02 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5s-7.5 7.5-7.5 7.5S12 19.5 12 19.5s7.5-7.5 7.5-7.5S12 4.5 12 4.5zM12 15a3 3 0 100-6 3 3 0 000 6z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.575 3.01 9.963 7.172.03.1.03.2 0 .33-.004.095-.018.19-.04.282A10.022 10.022 0 0112 19.5c-4.638 0-8.575-3.01-9.963-7.172z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.41a4.995 4.995 0 0112.02 0z" /></svg>`;
-            
+        function togglePasswordVisibility(id, button) {
+            const passwordInput = document.getElementById(id);
             if (passwordInput.type === 'password') {
                 passwordInput.type = 'text';
-                button.innerHTML = eyeClosedSVG;
+                button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.988 15.068a1.012 1.012 0 010-.639C5.378 10.378 8.657 7.5 12 7.5c3.342 0 6.621 2.878 8.012 7.068a1.012 1.012 0 010 .639C18.622 19.622 15.342 22.5 12 22.5c-3.342 0-6.621-2.878-8.012-7.068z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>';
             } else {
                 passwordInput.type = 'password';
-                button.innerHTML = eyeOpenSVG;
+                button.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.575 3.01 9.963 7.172.03.1.03.2 0 .33-.004.095-.018.19-.04.282A10.022 10.022 0 0112 19.5c-4.638 0-8.575-3.01-9.963-7.172z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>';
             }
-        };
+        }
 
         // Function to check password strength
-        const checkPasswordStrength = (password) => {
+        function checkPasswordStrength(password) {
             let strength = 0;
-            if (password.length > 5) strength++;
-            if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
-            if (password.match(/[0-9]/)) strength++;
-            if (password.match(/[^a-zA-Z0-9]/)) strength++;
+            const bar = passwordStrengthBar;
+            const text = passwordStrengthText;
 
-            if (password.length > 0) {
-                switch(strength) {
-                    case 0:
-                    case 1:
-                        strengthBar.style.width = '33%';
-                        strengthBar.style.backgroundColor = '#ef4444'; // Red
-                        strengthText.textContent = 'Weak';
-                        strengthText.classList.remove('text-gray-500', 'text-yellow-500', 'text-green-600');
-                        strengthText.classList.add('text-red-600');
-                        break;
-                    case 2:
-                        strengthBar.style.width = '66%';
-                        strengthBar.style.backgroundColor = '#f59e0b'; // Yellow
-                        strengthText.textContent = 'Medium';
-                        strengthText.classList.remove('text-gray-500', 'text-red-600', 'text-green-600');
-                        strengthText.classList.add('text-yellow-500');
-                        break;
-                    case 3:
-                    case 4:
-                        strengthBar.style.width = '100%';
-                        strengthBar.style.backgroundColor = '#10b981'; // Green
-                        strengthText.textContent = 'Strong';
-                        strengthText.classList.remove('text-gray-500', 'text-red-600', 'text-yellow-500');
-                        strengthText.classList.add('text-green-600');
-                        break;
-                }
-            } else {
-                // Reset to default if password is empty
-                strengthBar.style.width = '0';
-                strengthText.textContent = '';
-                strengthText.classList.remove('text-red-600', 'text-yellow-500', 'text-green-600');
-                strengthText.classList.add('text-gray-500');
+            // Criteria
+            const hasLowercase = /[a-z]/.test(password);
+            const hasUppercase = /[A-Z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(password);
+
+            // Points based on criteria
+            if (password.length >= 8) strength++;
+            if (hasLowercase) strength++;
+            if (hasUppercase) strength++;
+            if (hasNumber) strength++;
+            if (hasSpecial) strength++;
+
+            // Update UI
+            let width = 0;
+            let color = '';
+            let strengthText = '';
+
+            if (strength === 0) {
+                width = 0;
+                strengthText = '';
+            } else if (strength <= 2) {
+                width = 33;
+                color = '#ef4444'; // Red
+                strengthText = 'Weak';
+            } else if (strength === 3 || strength === 4) {
+                width = 66;
+                color = '#f59e0b'; // Orange
+                strengthText = 'Moderate';
+            } else if (strength === 5) {
+                width = 100;
+                color = '#22c55e'; // Green
+                strengthText = 'Strong';
             }
-        };
 
-        // Function to navigate between pages
-        const navigate = () => {
-            const hash = window.location.hash;
-            if (hash === '#register') {
-                loginPage.classList.add('hidden');
-                registerPage.classList.remove('hidden');
+            bar.style.width = width + '%';
+            bar.style.backgroundColor = color;
+            text.textContent = strengthText;
+        }
+
+        // Function to create a new business form section
+        function createBusinessForm() {
+            const newForm = document.createElement('div');
+            newForm.classList.add('business-form', 'space-y-2', 'border-l-4', 'border-eskom-blue', 'pl-4', 'py-2', 'relative', 'mt-4');
+            newForm.innerHTML = `
+                <button type="button" class="remove-business-btn absolute top-2 right-2 text-red-500 hover:text-red-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Business Name</label>
+                    <input type="text" name="business-name" class="mt-1 block w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-eskom-blue focus:border-transparent transition">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Business Address</label>
+                    <input type="text" name="business-address" class="mt-1 block w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-eskom-blue focus:border-transparent transition">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">Business Phone Number</label>
+                    <input type="tel" name="business-phone" class="mt-1 block w-full px-4 py-2 bg-gray-100 border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-eskom-blue focus:border-transparent transition">
+                </div>
+            `;
+            // Add event listener to the new remove button
+            newForm.querySelector('.remove-business-btn').addEventListener('click', () => {
+                newForm.remove();
+                setBusinessFieldsRequired(false);
+                updateBusinessFormRequiredState();
+            });
+            return newForm;
+        }
+
+        // Set or remove the required attribute for all business fields
+        function setBusinessFieldsRequired(isRequired) {
+            const businessFields = businessDetailsContainer.querySelectorAll('input[name^="business-"]');
+            businessFields.forEach(field => {
+                field.required = isRequired;
+            });
+        }
+
+        // Update the required state of business fields based on if they exist
+        function updateBusinessFormRequiredState() {
+            const businessForms = document.querySelectorAll('.business-form');
+            if (businessForms.length > 0) {
+                setBusinessFieldsRequired(true);
             } else {
-                loginPage.classList.remove('hidden');
-                registerPage.classList.add('hidden');
+                setBusinessFieldsRequired(false);
             }
-            messageBox.classList.add('hidden');
-        };
-
-        // Listen for hash changes
-        window.addEventListener('hashchange', navigate);
-
-        // Handle initial load
-        document.addEventListener('DOMContentLoaded', () => {
-            navigate();
+        }
+        
+        // Event listener to add a new business form
+        addBusinessBtn.addEventListener('click', () => {
+            const newForm = createBusinessForm();
+            businessDetailsContainer.appendChild(newForm);
+            setBusinessFieldsRequired(true);
         });
 
-        // Add event listener to password input to check strength
-        if (passwordInput) {
-            passwordInput.addEventListener('input', (e) => {
-                checkPasswordStrength(e.target.value);
-            });
-        }
+        // Toggle visibility of the business details container
+        userTypeSelect.addEventListener('change', (e) => {
+            if (e.target.value === 'business') {
+                businessDetailsContainer.classList.remove('hidden');
+                updateBusinessFormRequiredState();
+            } else {
+                businessDetailsContainer.classList.add('hidden');
+                setBusinessFieldsRequired(false);
+            }
+        });
 
-        // Handle Register form submission
-        if (registerForm) {
-            registerForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                if (!auth) {
-                    showMessage('Firebase not initialized. Cannot register.', 'error');
-                    return;
-                }
-                const email = document.getElementById('register-email').value;
-                const password = document.getElementById('register-password').value;
-                const confirmPassword = document.getElementById('register-confirm-password').value;
-                const isBusinessOwner = isBusinessOwnerCheckbox.checked;
+        // Event listener for password input to update strength bar
+        registerPasswordInput.addEventListener('input', (e) => {
+            checkPasswordStrength(e.target.value);
+        });
 
-                if (password !== confirmPassword) {
-                    showMessage('Passwords do not match.', 'error');
-                    return;
+        // Handle page switching
+        toRegisterLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginPage.classList.add('hidden');
+            registerPage.classList.remove('hidden');
+            messageBox.classList.add('hidden');
+        });
+
+        toLoginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            registerPage.classList.add('hidden');
+            loginPage.classList.remove('hidden');
+            messageBox.classList.add('hidden');
+        });
+
+        // Handle login form submission
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = loginForm['login-email'].value;
+            const password = loginForm['login-password'].value;
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                showMessage('Login successful!', 'success');
+                // Redirect here
+                // window.location.href = '/dashboard';
+            } catch (error) {
+                showMessage(`Error: ${error.message}`, 'error');
+            }
+        });
+
+        // Handle registration form submission
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fullNames = registerForm['register-fullnames'].value;
+            const email = registerForm['register-email'].value;
+            const password = registerForm['register-password'].value;
+            const confirmPassword = registerForm['register-confirm-password'].value;
+            const userType = userTypeSelect.value;
+            
+            if (password !== confirmPassword) {
+                showMessage('Passwords do not match!', 'error');
+                return;
+            }
+
+            let strength = 0;
+            const hasLowercase = /[a-z]/.test(password);
+            const hasUppercase = /[A-Z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const hasSpecial = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(password);
+            if (password.length >= 8) strength++;
+            if (hasLowercase) strength++;
+            if (hasUppercase) strength++;
+            if (hasNumber) strength++;
+            if (hasSpecial) strength++;
+
+            if (strength < 3) {
+                showMessage('Password is too weak. It must be at least 8 characters long and contain a mix of uppercase, lowercase, numbers, and symbols.', 'error');
+                return;
+            }
+
+            let businesses = [];
+            if (userType === 'business') {
+                const businessForms = document.querySelectorAll('.business-form');
+                if (businessForms.length === 0) {
+                     showMessage('Please add at least one business to register as a business owner.', 'error');
+                     return;
+                }
+                businessForms.forEach(form => {
+                    const businessName = form.querySelector('input[name="business-name"]').value;
+                    const businessAddress = form.querySelector('input[name="business-address"]').value;
+                    const businessPhone = form.querySelector('input[name="business-phone"]').value;
+                    businesses.push({
+                        name: businessName,
+                        address: businessAddress,
+                        phone: businessPhone
+                    });
+                });
+            }
+
+            try {
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                const user = userCredential.user;
+
+                const userData = {
+                    fullNames: fullNames,
+                    email: email,
+                    userType: userType,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                };
+                
+                if (userType === 'business') {
+                    Object.assign(userData, { businesses });
                 }
 
-                try {
-                    const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                    // This is where you would normally save the `isBusinessOwner` status to a database
-                    // For this example, we'll simply acknowledge the choice.
-                    showMessage('Registration successful! You can now log in.', 'success');
-                    registerForm.reset();
-                    checkPasswordStrength(''); // Reset the strength bar
-                    // Switch to login page after successful registration
-                    window.location.hash = '#login';
-                } catch (error) {
-                    const errorMessage = error.message;
-                    showMessage(errorMessage, 'error');
-                }
-            });
-        }
-        
-        // Handle Login form submission
-        if (loginForm) {
-            loginForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                if (!auth) {
-                    showMessage('Firebase not initialized. Cannot login.', 'error');
-                    return;
-                }
-                const email = document.getElementById('login-email').value;
-                const password = document.getElementById('login-password').value;
+                await db.collection('users').doc(user.uid).set(userData);
 
-                try {
-                    await signInWithEmailAndPassword(auth, email, password);
-                    showMessage('Login successful!', 'success');
-                } catch (error) {
-                    const errorMessage = error.message;
-                    showMessage(errorMessage, 'error');
-                }
-            });
-        }
-        
-        // Handle Sign Out button click
-        if (signOutBtn) {
-            signOutBtn.addEventListener('click', async () => {
-                if (!auth) return;
-                try {
-                    await signOut(auth);
-                    showMessage('Signed out successfully!', 'success');
-                } catch (error) {
-                    const errorMessage = error.message;
-                    showMessage(errorMessage, 'error');
-                }
-            });
-        }
+                showMessage('Registration successful! You can now log in.', 'success');
+                registerForm.reset();
+                userTypeSelect.value = 'consumer';
+                businessDetailsContainer.classList.add('hidden');
+                checkPasswordStrength('');
+                loginPage.classList.remove('hidden');
+                registerPage.classList.add('hidden');
+            } catch (error) {
+                showMessage(`Error: ${error.message}`, 'error');
+            }
+        });
 
-        // Authentication state change listener
-        if (auth) {
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    // User is signed in
-                    loginPage.classList.add('hidden');
-                    registerPage.classList.add('hidden');
-                    dashboard.classList.remove('hidden');
+        // New event listeners for forgot password functionality
+        forgotPasswordLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            passwordResetModal.classList.remove('hidden');
+        });
 
-                    // Simulate a business owner login based on a specific email
-                    const isBusinessOwner = user.email === 'business@example.com';
-                    
-                    if (isBusinessOwner) {
-                        userInfo.innerHTML = `
-                            <p class="text-xl font-semibold">Welcome, Business Owner!</p>
-                            <p class="text-sm text-gray-500 mt-2">You are logged in with user ID: ${user.uid}</p>
-                            <p class="mt-4">You have access to business management tools and settings.</p>
-                        `;
-                    } else {
-                        userInfo.textContent = `You are logged in with user ID: ${user.uid}`;
-                    }
-                } else {
-                    // User is signed out
-                    dashboard.classList.add('hidden');
-                    navigate(); // Go back to the correct page based on the hash
-                }
-            });
-        }
+        closeResetModalBtn.addEventListener('click', () => {
+            passwordResetModal.classList.add('hidden');
+        });
+
+        passwordResetForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = passwordResetForm['reset-email'].value;
+            try {
+                await auth.sendPasswordResetEmail(email);
+                showMessage('A password reset link has been sent to your email address.', 'success');
+                passwordResetForm.reset();
+                passwordResetModal.classList.add('hidden');
+            } catch (error) {
+                showMessage(`Error: ${error.message}`, 'error');
+            }
+        });
+
+        // Initialize with the correct required state
+        updateBusinessFormRequiredState();
     </script>
 </body>
 </html>
