@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | Payment</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to bottom right, #f3f4f6, #e2e8f0);
+        }
+        .bg-gray-800 {
+            background-color: #1a202c;
+        }
+        .error-message {
+            color: #ef4444; /* Tailwind's red-500 */
+            font-size: 0.875rem; /* text-sm */
+            margin-top: 0.25rem;
+        }
+        .warning-box {
+            background-color: #fef2f2; /* Tailwind's red-50 */
+            border-left: 4px solid #ef4444; /* Tailwind's red-500 */
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div class="bg-white rounded-lg shadow-xl overflow-hidden max-w-4xl w-full flex flex-col lg:flex-row">
+
+        <div class="p-8 lg:w-3/5">
+            <h2 class="text-3xl font-bold text-gray-900 mb-6">Payment Information</h2>
+            
+            <div id="warning-box" class="warning-box hidden">
+                <p class="font-bold text-lg text-red-700">Invalid Information Detected</p>
+                <p class="text-sm text-red-600">Please review your card details. Repeated invalid attempts may result in a temporary block.</p>
+            </div>
+
+            <form id="payment-form" class="space-y-6">
+                <div class="space-y-4">
+                    <div>
+                        <label for="name" class="block text-sm font-medium text-gray-700">Full Name</label>
+                        <input type="text" id="name" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2" required>
+                    </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Email Address</label>
+                        <input type="email" id="email" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2" required>
+                    </div>
+                    <div>
+                        <label for="address" class="block text-sm font-medium text-gray-700">Shipping Address</label>
+                        <input type="text" id="address" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2" required>
+                    </div>
+                </div>
+
+                <div class="border-t pt-6 space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-semibold text-gray-900">Credit Card</h3>
+                        <div class="flex space-x-2">
+                            <i class="fab fa-cc-visa text-3xl text-blue-800"></i>
+                            <i class="fab fa-cc-mastercard text-3xl text-red-700"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="card-number" class="block text-sm font-medium text-gray-700">Card Number</label>
+                        <div class="relative mt-1">
+                            <input type="text" id="card-number" class="block w-full border-gray-300 rounded-md shadow-sm p-2 pr-10" placeholder="0000 0000 0000 0000" required>
+                            <svg class="h-5 w-5 text-gray-400 absolute right-3 top-1/2 -translate-y-1/2" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M4 4a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2-2a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V4a2 2 0 00-2-2H6zm0 4h12v2H6V6zm0 4h12v2H6v-2zm0 4h12v2H6v-2z"></path>
+                            </svg>
+                        </div>
+                        <p id="card-number-error" class="error-message hidden">Please enter a valid card number.</p>
+                    </div>
+                    <div class="flex space-x-4">
+                        <div class="w-1/2">
+                            <label for="expiry" class="block text-sm font-medium text-gray-700">Expiry Date</label>
+                            <input type="text" id="expiry" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2" placeholder="MM/YY" required>
+                            <p id="expiry-error" class="error-message hidden">Please enter a valid future date (MM/YY).</p>
+                        </div>
+                        <div class="w-1/2">
+                            <label for="cvc" class="block text-sm font-medium text-gray-700">CVC</label>
+                            <input type="text" id="cvc" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm p-2" placeholder="123" required>
+                            <p id="cvc-error" class="error-message hidden">Please enter a 3 or 4-digit CVV.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" id="pay-now-button" class="w-full bg-blue-600 text-white font-bold py-3 rounded-md shadow-lg transition-colors" disabled>
+                    Pay Now
+                </button>
+            </form>
+        </div>
+
+        <div class="bg-slate-800 p-8 lg:w-2/5 text-white">
+            <h3 class="text-xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400">Order Summary</h3>
+            <div id="order-summary-items" class="space-y-4">
+            </div>
+            
+            <div class="mt-8 space-y-2">
+                <div class="flex justify-between">
+                    <span class="text-gray-300">Subtotal</span>
+                    <span id="subtotal-amount" class="font-medium text-white">R0.00</span>
+                </div>
+                
+                <div class="flex justify-between pt-4 border-t border-gray-600 font-bold text-lg">
+                    <span>Total</span>
+                    <span id="total-amount">R0.00</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const paymentAmount = localStorage.getItem('topUpAmount');
+        const meterNumber = localStorage.getItem('meterNumber');
+
+        const orderSummaryItems = document.getElementById('order-summary-items');
+        const subtotalElement = document.getElementById('subtotal-amount');
+        const totalElement = document.getElementById('total-amount');
+        const warningBox = document.getElementById('warning-box');
+        const payNowButton = document.getElementById('pay-now-button');
+
+        // Dynamically update order summary
+        if (paymentAmount && meterNumber) {
+            const electricityItem = `
+                <div class="flex justify-between items-center pb-2 border-b border-gray-700">
+                    <div>
+                        <p class="font-medium">Electricity Top-Up</p>
+                        <p class="text-sm text-gray-400">Meter No: ${meterNumber}</p>
+                    </div>
+                    <p class="font-semibold">R${parseFloat(paymentAmount).toFixed(2)}</p>
+                </div>
+            `;
+            
+            orderSummaryItems.innerHTML = electricityItem;
+            const total = parseFloat(paymentAmount).toFixed(2);
+            subtotalElement.textContent = `R${total}`;
+            totalElement.textContent = `R${total}`;
+        } else {
+            orderSummaryItems.innerHTML = '<p class="text-gray-400 text-center">No order details found.</p>';
+            subtotalElement.textContent = 'R0.00';
+            totalElement.textContent = 'R0.00';
+        }
+
+        // Card number formatting logic
+        const cardNumberInput = document.getElementById('card-number');
+        cardNumberInput.addEventListener('input', (event) => {
+            let value = event.target.value.replace(/\s/g, '');
+            let formattedValue = '';
+            for (let i = 0; i < value.length; i++) {
+                if (i > 0 && i % 4 === 0) {
+                    formattedValue += ' ';
+                }
+                formattedValue += value[i];
+            }
+            event.target.value = formattedValue.trim();
+            updateButtonState();
+        });
+
+        // Expiry date formatting logic
+        const expiryInput = document.getElementById('expiry');
+        expiryInput.addEventListener('input', (event) => {
+            let value = event.target.value.replace(/\D/g, '');
+            if (value.length > 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            event.target.value = value;
+            updateButtonState();
+        });
+
+        // CVC input listener
+        const cvcInput = document.getElementById('cvc');
+        cvcInput.addEventListener('input', updateButtonState);
+
+        // Add form submission handler with validation
+        const paymentForm = document.getElementById('payment-form');
+        paymentForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            if (validateForm()) {
+                warningBox.classList.add('hidden');
+                alert(`Payment of R${paymentAmount} for Meter No: ${meterNumber} processed successfully!`);
+
+                localStorage.removeItem('topUpAmount');
+                localStorage.removeItem('meterNumber');
+
+                window.location.href = 'dashboard.html';
+            } else {
+                warningBox.classList.remove('hidden');
+            }
+        });
+
+        function isValidLuhn(cardNumber) {
+            let sum = 0;
+            let shouldDouble = false;
+            for (let i = cardNumber.length - 1; i >= 0; i--) {
+                let digit = parseInt(cardNumber.charAt(i), 10);
+                if (shouldDouble) {
+                    if ((digit *= 2) > 9) digit -= 9;
+                }
+                sum += digit;
+                shouldDouble = !shouldDouble;
+            }
+            return (sum % 10) === 0;
+        }
+
+        function validateCardNumber() {
+            const cardNumber = document.getElementById('card-number').value.replace(/\s/g, '');
+            return /^\d{16}$/.test(cardNumber) && isValidLuhn(cardNumber);
+        }
+
+        function validateExpiryDate() {
+            const expiry = document.getElementById('expiry').value;
+            const [month, year] = expiry.split('/').map(num => parseInt(num, 10));
+            const currentYear = new Date().getFullYear() % 100;
+            const currentMonth = new Date().getMonth() + 1;
+            return /^\d{2}\/\d{2}$/.test(expiry) && month >= 1 && month <= 12 && (year > currentYear || (year === currentYear && month >= currentMonth));
+        }
+
+        function validateCVC() {
+            const cvc = document.getElementById('cvc').value;
+            return /^\d{3,4}$/.test(cvc);
+        }
+
+        function validateForm() {
+            const isCardNumberValid = validateCardNumber();
+            const isExpiryValid = validateExpiryDate();
+            const isCVCValid = validateCVC();
+
+            document.getElementById('card-number-error').classList.toggle('hidden', isCardNumberValid);
+            document.getElementById('expiry-error').classList.toggle('hidden', isExpiryValid);
+            document.getElementById('cvc-error').classList.toggle('hidden', isCVCValid);
+
+            return isCardNumberValid && isExpiryValid && isCVCValid;
+        }
+
+        function updateButtonState() {
+            const isCardNumberValid = validateCardNumber();
+            const isExpiryValid = validateExpiryDate();
+            const isCVCValid = validateCVC();
+
+            if (isCardNumberValid && isExpiryValid && isCVCValid) {
+                payNowButton.disabled = false;
+                payNowButton.classList.remove('bg-blue-300', 'cursor-not-allowed');
+                payNowButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
+            } else {
+                payNowButton.disabled = true;
+                payNowButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                payNowButton.classList.add('bg-blue-300', 'cursor-not-allowed');
+            }
+        }
+    </script>
+</body>
+</html>
