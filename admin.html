@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GridPay Admin Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .content-container { position: relative; z-index: 10; }
+        .inactivity-badge { animation: pulse 1s infinite; }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .suspended-row {
+            background-color: #fca5a5; /* Red-300 */
+        }
+        .flagged-row {
+            background-color: #fde68a; /* Yellow-300 */
+        }
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 50;
+        }
+        .modal-content {
+            background: white; padding: 2rem; border-radius: 0.5rem;
+            max-width: 90%; width: 400px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .hidden {
+            display: none !important;
+        }
+        .error-message {
+            color: #ef4444; /* red-500 */
+        }
+    </style>
+</head>
+<body class="bg-blue-50 text-gray-900">
+    <div class="content-container min-h-screen flex flex-col p-4">
+
+        <div id="login-page" class="flex flex-col items-center justify-center min-h-screen">
+            <div class="w-full max-w-md p-8 space-y-8 bg-white rounded-xl shadow-lg border border-blue-200">
+                <h2 class="text-3xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">GridPay Admin Login</h2>
+                <form id="login-form" class="mt-8 space-y-6">
+                    <input type="hidden" name="remember" value="true">
+                    <div class="rounded-md shadow-sm -space-y-px">
+                        <div>
+                            <label for="username" class="sr-only">Username</label>
+                            <input id="username" name="username" type="text" autocomplete="username" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" placeholder="Username">
+                        </div>
+                        <div>
+                            <label for="password" class="sr-only">Password</label>
+                            <input id="password" name="password" type="password" autocomplete="current-password" required class="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm" placeholder="Password">
+                        </div>
+                    </div>
+
+                    <div id="login-error-message" class="text-center text-sm error-message hidden">
+                        Invalid username or password.
+                    </div>
+
+                    <div>
+                        <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                            Sign in
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div id="admin-dashboard" class="hidden flex-grow flex flex-col">
+            <nav class="w-full max-w-7xl mx-auto p-4 md:p-6 bg-white rounded-xl shadow-lg mb-8 border border-blue-200">
+                <div class="flex items-center justify-between">
+                    <a href="#" class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-500">GridPay Admin</a>
+                    <div class="flex items-center gap-6 text-lg font-medium">
+                        <span class="text-gray-700">Welcome, Admin</span>
+                        <a href="homepage.html" id="logout-button" class="text-red-600 hover:underline">Logout</a>
+                    </div>
+                </div>
+            </nav>
+
+            <main class="flex-grow flex flex-col items-center p-4 w-full max-w-7xl mx-auto">
+                <div class="w-full">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="p-6 bg-white rounded-2xl shadow-md border border-blue-200">
+                            <div class="flex items-center space-x-4">
+                                <i class="fas fa-users text-3xl text-blue-600"></i>
+                                <div>
+                                    <p class="text-xl font-bold text-gray-800">125</p>
+                                    <p class="text-sm text-gray-500">Total Users</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-6 bg-white rounded-2xl shadow-md border border-blue-200">
+                            <div class="flex items-center space-x-4">
+                                <i class="fas fa-arrow-right-arrow-left text-3xl text-green-600"></i>
+                                <div>
+                                    <p class="text-xl font-bold text-gray-800">R2,500.00</p>
+                                    <p class="text-sm text-gray-500">Today's Transactions</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="p-6 bg-white rounded-2xl shadow-md border border-blue-200">
+                            <div class="flex items-center space-x-4">
+                                <i class="fas fa-exclamation-triangle text-3xl text-yellow-600"></i>
+                                <div>
+                                    <p class="text-xl font-bold text-gray-800"><span id="inactive-users-count">3</span></p>
+                                    <p class="text-sm text-gray-500">Inactive Users</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl shadow-md border border-blue-200 p-6">
+                        <h2 class="text-2xl font-bold mb-4 text-gray-800">User & Transaction Log</h2>
+                        <div class="mb-4 flex flex-wrap gap-2">
+                            <button data-filter="all" class="filter-btn px-4 py-2 text-sm font-medium rounded-md bg-blue-600 text-white hover:bg-blue-700 transition-colors">All Users</button>
+                            <button data-filter="90-days" class="filter-btn px-4 py-2 text-sm font-medium rounded-md bg-gray-200 text-gray-800 hover:bg-gray-300 transition-colors">Inactive (90+ Days)</button>
+                            <button data-filter="120-days" class="filter-btn px-4 py-2 text-sm font-medium rounded-md bg-gray-200 text-gray-800 hover:bg-gray-300 transition-colors">Inactive (120+ Days)</button>
+                            <button data-filter="suspended" class="filter-btn px-4 py-2 text-sm font-medium rounded-md bg-gray-200 text-gray-800 hover:bg-gray-300 transition-colors">Suspended</button>
+                            <button data-filter="flagged" class="filter-btn px-4 py-2 text-sm font-medium rounded-md bg-gray-200 text-gray-800 hover:bg-gray-300 transition-colors">Flagged</button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-blue-100">
+                                    <tr>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">User ID</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">User Name</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Meter ID</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Last Top-up</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Status</th>
+                                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="user-table-body" class="bg-white divide-y divide-gray-200">
+                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            
+            <footer class="w-full mt-8 p-6 text-center bg-blue-100">
+                <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-gray-700 text-sm">
+                    <div class="mb-4 md:mb-0">
+                        &copy; 2025 GridPay Admin. All rights reserved.
+                    </div>
+                    <div class="flex flex-wrap justify-center gap-6 font-medium">
+                        <a href="#" class="hover:text-blue-500 transition-colors duration-200">Help</a>
+                        <a href="#" class="hover:text-blue-500 transition-colors duration-200">Contact Support</a>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <div id="confirm-modal-overlay" class="modal-overlay hidden">
+        <div class="modal-content text-center">
+            <div class="mt-3 text-center">
+                <h3 class="text-lg leading-6 font-medium text-gray-900" id="modal-title"></h3>
+                <div class="mt-2 px-7 py-3">
+                    <p class="text-sm text-gray-500" id="modal-message"></p>
+                </div>
+                <div class="items-center px-4 py-3">
+                    <button id="cancel-action-btn" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md shadow-sm hover:bg-gray-300 mr-2">Cancel</button>
+                    <button id="confirm-action-btn" class="px-4 py-2 bg-red-600 text-white rounded-md shadow-sm hover:bg-red-700">Confirm</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loginPage = document.getElementById('login-page');
+            const adminDashboard = document.getElementById('admin-dashboard');
+            const loginForm = document.getElementById('login-form');
+            const logoutButton = document.getElementById('logout-button');
+            const loginErrorMessage = document.getElementById('login-error-message');
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            
+            const userTableBody = document.getElementById('user-table-body');
+            const confirmModalOverlay = document.getElementById('confirm-modal-overlay');
+            const modalTitle = document.getElementById('modal-title');
+            const modalMessage = document.getElementById('modal-message');
+            const confirmActionBtn = document.getElementById('confirm-action-btn');
+            const cancelActionBtn = document.getElementById('cancel-action-btn');
+            const inactiveUsersCountSpan = document.getElementById('inactive-users-count');
+
+            // Set the homepage file name here
+            const homepageFile = 'homepage.html';
+            
+            // Dummy data for demonstration purposes
+            const users = [
+                { id: 'GP101', name: 'Alice Johnson', meterId: '2345-6789-1234', lastTopUp: '2025-08-10', status: 'Active' },
+                { id: 'GP102', name: 'Bob Williams', meterId: '5678-9123-4567', lastTopUp: '2025-05-14', status: 'Active' }, 
+                { id: 'GP103', name: 'Charlie Davis', meterId: '9123-4567-8901', lastTopUp: '2025-07-28', status: 'Active' },
+                { id: 'GP104', name: 'Diana Miller', meterId: '3456-7890-1234', lastTopUp: '2025-04-01', status: 'Suspended' }, 
+                { id: 'GP105', name: 'Eve Brown', meterId: '7890-1234-5678', lastTopUp: '2025-05-13', status: 'Flagged' },
+                { id: 'GP106', name: 'Frank White', meterId: '1234-5678-9101', lastTopUp: '2024-12-10', status: 'Active' }, 
+                { id: 'GP107', name: 'Grace Taylor', meterId: '9876-5432-1098', lastTopUp: '2025-03-01', status: 'Active' },
+            ];
+
+            const currentDate = new Date();
+
+            function renderUsers(filter = 'all') {
+                userTableBody.innerHTML = '';
+                let inactiveCount = 0;
+                let filteredUsers = users;
+
+                if (filter === '90-days') {
+                    filteredUsers = users.filter(user => {
+                        const lastTopUpDate = new Date(user.lastTopUp);
+                        const timeDifference = currentDate.getTime() - lastTopUpDate.getTime();
+                        const daysDifference = timeDifference / (1000 * 3600 * 24);
+                        return daysDifference > 90 && user.status === 'Active';
+                    });
+                } else if (filter === '120-days') {
+                    filteredUsers = users.filter(user => {
+                        const lastTopUpDate = new Date(user.lastTopUp);
+                        const timeDifference = currentDate.getTime() - lastTopUpDate.getTime();
+                        const daysDifference = timeDifference / (1000 * 3600 * 24);
+                        return daysDifference > 120 && user.status === 'Active';
+                    });
+                } else if (filter === 'suspended') {
+                    filteredUsers = users.filter(user => user.status === 'Suspended');
+                } else if (filter === 'flagged') {
+                    filteredUsers = users.filter(user => user.status === 'Flagged');
+                }
+
+                users.forEach(user => {
+                    const lastTopUpDate = new Date(user.lastTopUp);
+                    const timeDifference = currentDate.getTime() - lastTopUpDate.getTime();
+                    const daysDifference = timeDifference / (1000 * 3600 * 24);
+                    if (daysDifference > 90) {
+                        inactiveCount++;
+                    }
+                });
+                inactiveUsersCountSpan.textContent = inactiveCount;
+
+                filteredUsers.forEach(user => {
+                    const lastTopUpDate = new Date(user.lastTopUp);
+                    const timeDifference = currentDate.getTime() - lastTopUpDate.getTime();
+                    const daysDifference = timeDifference / (1000 * 3600 * 24);
+
+                    let statusBadge = '';
+                    let rowClass = '';
+
+                    if (user.status === 'Suspended') {
+                        statusBadge = `<span class="bg-red-300 text-red-700 text-xs font-semibold px-2 py-1 rounded-full">Suspended</span>`;
+                        rowClass = 'suspended-row';
+                    } else if (user.status === 'Flagged') {
+                        statusBadge = `<span class="bg-yellow-300 text-yellow-700 text-xs font-semibold px-2 py-1 rounded-full">Flagged</span>`;
+                        rowClass = 'flagged-row';
+                    } else if (daysDifference > 90) {
+                        statusBadge = `<span class="bg-orange-300 text-orange-700 text-xs font-semibold px-2 py-1 rounded-full inactivity-badge">Inactive</span>`;
+                    } else {
+                        statusBadge = `<span class="bg-green-300 text-green-700 text-xs font-semibold px-2 py-1 rounded-full">Active</span>`;
+                    }
+                    
+                    const row = document.createElement('tr');
+                    row.className = rowClass;
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${user.id}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${user.name}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${user.meterId}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${user.lastTopUp}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${statusBadge}</td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            ${user.status !== 'Suspended' ? `<button data-action="suspend" data-user-id="${user.id}" class="text-red-700 hover:text-red-900 mr-2">Suspend</button>` : `<button class="text-gray-400 cursor-not-allowed">Suspend</button>`}
+                            ${user.status !== 'Flagged' ? `<button data-action="flag" data-user-id="${user.id}" class="text-yellow-700 hover:text-yellow-900">Flag</button>` : `<button class="text-gray-400 cursor-not-allowed">Flag</button>`}
+                        </td>
+                    `;
+                    userTableBody.appendChild(row);
+                });
+            }
+
+            function updateFilterButtonStyles(activeFilter) {
+                filterButtons.forEach(button => {
+                    if (button.dataset.filter === activeFilter) {
+                        button.classList.remove('bg-gray-200', 'text-gray-800', 'hover:bg-gray-300');
+                        button.classList.add('bg-blue-600', 'text-white', 'hover:bg-blue-700');
+                    } else {
+                        button.classList.remove('bg-blue-600', 'text-white', 'hover:bg-blue-700');
+                        button.classList.add('bg-gray-200', 'text-gray-800', 'hover:bg-gray-300');
+                    }
+                });
+            }
+
+            function openModal(title, message, onConfirm) {
+                modalTitle.textContent = title;
+                modalMessage.textContent = message;
+                confirmModalOverlay.classList.remove('hidden');
+                
+                confirmActionBtn.onclick = null;
+                confirmActionBtn.onclick = onConfirm;
+
+                cancelActionBtn.onclick = () => {
+                    confirmModalOverlay.classList.add('hidden');
+                };
+            }
+
+            userTableBody.addEventListener('click', (event) => {
+                const button = event.target.closest('button');
+                if (!button) return;
+                
+                const action = button.dataset.action;
+                const userId = button.dataset.userId;
+
+                if (action === 'suspend') {
+                    openModal(
+                        'Confirm Suspension',
+                        `Are you sure you want to suspend user ${userId}? This will block their access to the system.`,
+                        () => {
+                            const userIndex = users.findIndex(u => u.id === userId);
+                            if (userIndex !== -1) {
+                                users[userIndex].status = 'Suspended';
+                                renderUsers();
+                                confirmModalOverlay.classList.add('hidden');
+                            }
+                        }
+                    );
+                } else if (action === 'flag') {
+                    openModal(
+                        'Confirm Flagging',
+                        `Are you sure you want to flag user ${userId}? This marks the account for further review.`,
+                        () => {
+                            const userIndex = users.findIndex(u => u.id === userId);
+                            if (userIndex !== -1) {
+                                users[userIndex].status = 'Flagged';
+                                renderUsers();
+                                confirmModalOverlay.classList.add('hidden');
+                            }
+                        }
+                    );
+                }
+            });
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const filterValue = button.dataset.filter;
+                    updateFilterButtonStyles(filterValue);
+                    renderUsers(filterValue);
+                });
+            });
+
+            // Login Logic
+            loginForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const usernameInput = document.getElementById('username').value;
+                const passwordInput = document.getElementById('password').value;
+
+                // Hardcoded credentials for frontend-only example
+                if (usernameInput === 'admin' && passwordInput === 'password') {
+                    loginPage.classList.add('hidden');
+                    adminDashboard.classList.remove('hidden');
+                    renderUsers();
+                } else {
+                    loginErrorMessage.classList.remove('hidden');
+                }
+            });
+
+            // Logout Logic
+            logoutButton.addEventListener('click', (e) => {
+                // When logout is clicked, simply navigate to the homepage file.
+                window.location.href = homepageFile;
+            });
+
+            // Initial render
+            updateFilterButtonStyles('all');
+        });
+    </script>
+</body>
+</html>
