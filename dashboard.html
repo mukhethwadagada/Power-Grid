@@ -4,135 +4,46 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GridPay Dashboard</title>
-    <!-- Load Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
-        /* Use a nice, modern font */
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-
-        /* Custom styles for the animation canvas */
-        #electricity-canvas {
-            position: fixed; /* Use fixed to keep it behind all content */
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0; /* Place behind other content */
-        }
-        
-        /* Make content relative to be on top of the canvas */
-        .content-container {
-            position: relative;
-            z-index: 10;
-        }
-
-        /* Gradient overlay for thematic effect, adjusted for themes */
-        .gradient-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 5;
-            background: radial-gradient(circle, rgba(0, 100, 200, 0.1) 0%, rgba(243, 244, 246, 0) 70%);
-        }
-        
-        /* Custom styles for the bar chart placeholder */
-        .bar-chart-bar {
-            width: 25px;
-            background: linear-gradient(to top, #3b82f6, #0ea5e9);
-            transition: height 0.5s ease;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            border-radius: 4px;
-        }
-
-        /* Custom styles for the animated progress circle */
-        .progress-ring {
-            width: 100px;
-            height: 100px;
-            transform: rotate(-90deg);
-        }
-        .progress-ring-circle {
-            transition: stroke-dashoffset 0.5s ease;
-        }
-
-        /* Custom styles for the modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 50;
-            transition: opacity 0.3s ease;
-            opacity: 0;
-            visibility: hidden;
-        }
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        .modal-content {
-            background: white;
-            padding: 2rem;
-            border-radius: 1rem;
-            max-width: 90%;
-            width: 500px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            transform: scale(0.9);
-            transition: transform 0.3s ease, background-color 0.5s ease;
-        }
-        .modal-content.show {
-            transform: scale(1);
-        }
+        body { font-family: 'Inter', sans-serif; }
+        #electricity-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+        .content-container { position: relative; z-index: 10; }
+        .gradient-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; background: radial-gradient(circle, rgba(0, 100, 200, 0.1) 0%, rgba(243, 244, 246, 0) 70%); }
+        .bar-chart-bar { width: 25px; background: linear-gradient(to top, #3b82f6, #0ea5e9); transition: height 0.5s ease; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border-radius: 4px; }
+        .progress-ring { width: 100px; height: 100px; transform: rotate(-90deg); }
+        .progress-ring-circle { transition: stroke-dashoffset 0.5s ease; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.7); display: flex; align-items: center; justify-content: center; z-index: 50; transition: opacity 0.3s ease; opacity: 0; visibility: hidden; }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content { background: white; padding: 2rem; border-radius: 1rem; max-width: 90%; width: 500px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); transform: scale(0.9); transition: transform 0.3s ease, background-color 0.5s ease; }
+        .modal-content.show { transform: scale(1); }
     </style>
 </head>
 <body class="bg-gray-100 text-gray-900">
 
-    <!-- The canvas for the animated background -->
     <canvas id="electricity-canvas"></canvas>
     <div class="gradient-overlay"></div>
 
     <div class="content-container min-h-screen flex flex-col p-4">
-        
-        <!-- Navigation Bar -->
         <nav class="w-full max-w-7xl mx-auto p-4 md:p-6 bg-white bg-opacity-80 rounded-xl shadow-lg backdrop-blur-sm mb-8 border border-gray-200">
             <div class="flex flex-col md:flex-row items-center justify-between">
-                <!-- Logo / Site Title -->
-                <a href="#" class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500 hover:scale-105 transition-transform duration-300 mb-4 md:mb-0">
-                    GridPay
-                </a>
-                
-                <!-- Nav Links -->
+                <a href="#" class="text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-cyan-500 hover:scale-105 transition-transform duration-300 mb-4 md:mb-0">GridPay</a>
                 <div class="flex items-center flex-wrap justify-center gap-6 text-lg font-medium">
-                    <!-- Nav links with data-page attribute for client-side navigation -->
                     <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors duration-200" data-page="dashboard">Dashboard</a>
-                    <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors duration-200">Contact</a>
+                    <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors duration-200" data-page="contact">Contact</a>
                 </div>
             </div>
         </nav>
 
-        <!-- Main Dashboard Content Area -->
         <main id="main-content" class="flex-grow flex flex-col items-center p-4">
-            <!-- Content will be dynamically loaded here -->
-        </main>
+            </main>
         
-        <!-- Footer Section -->
         <footer class="w-full mt-8 p-6 text-center bg-gray-200">
             <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center text-gray-700 text-sm">
                 <div class="mb-4 md:mb-0">
                     &copy; 2025 GridPay. All rights reserved.
                 </div>
-                
-                <!-- Footer Links -->
                 <div class="flex flex-wrap justify-center gap-6 font-medium">
                     <a href="#" class="hover:text-blue-500 transition-colors duration-200">About Us</a>
                     <a href="#" class="hover:text-blue-500 transition-colors duration-200">Contact</a>
@@ -140,10 +51,8 @@
                 </div>
             </div>
         </footer>
-
     </div>
 
-    <!-- Dynamic Modal -->
     <div id="dynamic-modal-overlay" class="modal-overlay">
         <div id="dynamic-modal-content" class="modal-content text-center">
             <div class="flex justify-center mb-4">
@@ -151,30 +60,25 @@
             </div>
             <h3 id="modal-title" class="text-2xl font-bold mb-2"></h3>
             <p id="modal-message" class="text-gray-700"></p>
-            <button id="close-modal-btn" class="mt-6 bg-green-500 text-white font-bold py-2 px-6 rounded-full hover:bg-green-600 transition-colors">
-                OK
-            </button>
+            <button id="close-modal-btn" class="mt-6 bg-green-500 text-white font-bold py-2 px-6 rounded-full hover:bg-green-600 transition-colors">OK</button>
         </div>
     </div>
 
 
     <script>
-        // JavaScript for the canvas animation, and dashboard functionality
         window.onload = function() {
+            // Your existing canvas and animation code...
             const canvas = document.getElementById('electricity-canvas');
             const ctx = canvas.getContext('2d');
             let particles = [];
-            const particleCount = 150; // Number of particles for the animation
+            const particleCount = 150;
             const mainContent = document.getElementById('main-content');
-
-            // Modal elements
             const dynamicModalOverlay = document.getElementById('dynamic-modal-overlay');
             const dynamicModalContent = document.getElementById('dynamic-modal-content');
             const modalTitle = document.getElementById('modal-title');
             const modalMessage = document.getElementById('modal-message');
             const closeModalBtn = document.getElementById('close-modal-btn');
 
-            // Set the canvas size to match the window
             function resizeCanvas() {
                 canvas.width = window.innerWidth;
                 canvas.height = window.innerHeight;
@@ -182,18 +86,16 @@
             window.addEventListener('resize', resizeCanvas);
             resizeCanvas();
 
-            // Particle class to manage each animated point
             class Particle {
                 constructor(baseColor) {
                     this.x = Math.random() * canvas.width;
                     this.y = Math.random() * canvas.height;
-                    this.vx = (Math.random() - 0.5) * 1.5; // Velocity x
-                    this.vy = (Math.random() - 0.5) * 1.5; // Velocity y
-                    this.radius = Math.random() * 1.5 + 1; // Radius of the particle
+                    this.vx = (Math.random() - 0.5) * 1.5;
+                    this.vy = (Math.random() - 0.5) * 1.5;
+                    this.radius = Math.random() * 1.5 + 1;
                     this.baseColor = baseColor;
-                    this.life = Math.random() * 50 + 50; // Particle lifetime
+                    this.life = Math.random() * 50 + 50;
                 }
-
                 draw() {
                     ctx.beginPath();
                     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2, false);
@@ -201,17 +103,13 @@
                     ctx.fill();
                     ctx.closePath();
                 }
-
                 update() {
                     this.x += this.vx;
                     this.y += this.vy;
-
                     if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
                     if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-
                     this.life--;
                     this.color = this.baseColor + (this.life / 100) + ')';
-
                     if (this.life <= 0) {
                         this.x = Math.random() * canvas.width;
                         this.y = Math.random() * canvas.height;
@@ -224,23 +122,18 @@
                 }
             }
             
-            // Set up initial particles
             const particleColor = 'rgba(0, 100, 200, ';
             for (let i = 0; i < particleCount; i++) {
                 particles.push(new Particle(particleColor));
             }
 
-            // Animation loop
             function animate() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                
                 const lineColor = `rgba(0, 100, 200,`;
-
                 particles.forEach(p => {
                     p.draw();
                     p.update();
                 });
-                
                 for (let a = 0; a < particles.length; a++) {
                     for (let b = a; b < particles.length; b++) {
                         const dist = Math.hypot(particles[a].x - particles[b].x, particles[a].y - particles[b].y);
@@ -260,22 +153,13 @@
             animate();
 
             // --- Dashboard and Settings Page Content ---
-            // Define the HTML content for each page
             const dashboardContent = `
                 <div class="w-full max-w-7xl">
-                    <!-- Welcome Section -->
                     <div class="bg-white bg-opacity-70 rounded-3xl shadow-2xl backdrop-blur-md border border-gray-300 p-8 md:p-12 mb-8">
-                        <h1 class="text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-400">
-                            Hello, [User Name]
-                        </h1>
-                        <p class="mt-4 text-lg md:text-xl text-gray-700">
-                            Welcome back! Here's an overview of your smart metering account.
-                        </p>
+                        <h1 class="text-3xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-400">Hello, [User Name]</h1>
+                        <p class="mt-4 text-lg md:text-xl text-gray-700">Welcome back! Here's an overview of your smart metering account.</p>
                     </div>
-
-                    <!-- Metrics and Summary Cards -->
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                        <!-- Card 1: Remaining Balance -->
                         <div class="p-6 bg-white bg-opacity-80 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-200">
                             <div class="flex items-center space-x-4">
                                 <i class="fas fa-wallet text-3xl text-blue-500"></i>
@@ -285,7 +169,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Card 2: Today's Consumption -->
                         <div class="p-6 bg-white bg-opacity-80 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-200">
                             <div class="flex items-center space-x-4">
                                 <i class="fas fa-bolt text-3xl text-yellow-500"></i>
@@ -295,7 +178,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Card 3: Energy Saved -->
                         <div class="p-6 bg-white bg-opacity-80 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-200">
                             <div class="flex items-center space-x-4">
                                 <i class="fas fa-leaf text-3xl text-green-500"></i>
@@ -305,7 +187,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Card 4: Load Electricity -->
                         <div data-page="topup" class="p-6 bg-white bg-opacity-80 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors duration-200">
                             <div class="flex items-center space-x-4">
                                 <i class="fas fa-credit-card text-3xl text-purple-500"></i>
@@ -315,7 +196,6 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Card 5: Settings -->
                         <div data-page="settings" class="p-6 bg-white bg-opacity-80 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-200 cursor-pointer hover:bg-gray-50 transition-colors duration-200">
                             <div class="flex items-center space-x-4">
                                 <i class="fas fa-cog text-3xl text-gray-600"></i>
@@ -326,16 +206,12 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Consumption Chart and Transaction History -->
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        <!-- Consumption Chart Section -->
                         <div class="p-8 bg-white bg-opacity-80 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-200">
                             <div class="flex justify-between items-center mb-4">
                                 <h2 class="text-2xl font-bold text-gray-800">Weekly Consumption</h2>
                                 <span class="text-sm text-gray-500">Past 7 Days</span>
                             </div>
-                            <!-- Placeholder for a bar chart -->
                             <div class="h-64 flex items-end justify-around p-4 rounded-lg bg-gray-100">
                                 <div class="bar-chart-bar h-[75%]"></div>
                                 <div class="bar-chart-bar h-[85%]"></div>
@@ -346,17 +222,9 @@
                                 <div class="bar-chart-bar h-[40%]"></div>
                             </div>
                             <div class="flex justify-around mt-2 text-xs text-gray-500">
-                                <span>Mon</span>
-                                <span>Tue</span>
-                                <span>Wed</span>
-                                <span>Thu</span>
-                                <span>Fri</span>
-                                <span>Sat</span>
-                                <span>Sun</span>
+                                <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
                             </div>
                         </div>
-
-                        <!-- Recent Transactions Section -->
                         <div class="p-8 bg-white bg-opacity-80 rounded-2xl shadow-lg backdrop-blur-sm border border-gray-200">
                             <h2 class="text-2xl font-bold text-gray-800 mb-4">Recent Transactions</h2>
                             <ul class="space-y-4">
@@ -372,7 +240,6 @@
                                         <p class="font-medium text-red-500">-R100.00</p>
                                         <p class="text-xs text-gray-500">2025-08-05</p>
                                     </div>
-                                    <p class="text-xs text-gray-500">Balance: R150.00</p>
                                 </li>
                                 <li class="flex justify-between items-center border-b pb-2 border-gray-200">
                                     <div class="flex items-center space-x-3">
@@ -386,7 +253,6 @@
                                         <p class="font-medium text-green-500">+R250.00</p>
                                         <p class="text-xs text-gray-500">2025-08-01</p>
                                     </div>
-                                    <p class="text-xs text-gray-500">Balance: R250.00</p>
                                 </li>
                                 <li class="flex justify-between items-center border-b pb-2 border-gray-200">
                                     <div class="flex items-center space-x-3">
@@ -400,7 +266,6 @@
                                         <p class="font-medium text-red-500">-R250.00</p>
                                         <p class="text-xs text-gray-500">2025-07-28</p>
                                     </div>
-                                    <p class="text-xs text-gray-500">Balance: R0.00</p>
                                 </li>
                             </ul>
                         </div>
@@ -412,7 +277,6 @@
                 <div class="w-full max-w-2xl mx-auto p-8 bg-white bg-opacity-70 rounded-3xl shadow-2xl backdrop-blur-md border border-gray-300">
                     <h1 class="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-400 mb-6">Load Electricity</h1>
                     <p class="text-lg text-gray-700 mb-6">Choose an amount to top up your account, or enter a custom value.</p>
-                    
                     <form id="top-up-form">
                         <div class="mb-4">
                             <label for="meter-number-input" class="block text-sm font-medium text-gray-700 mb-2">Meter Number</label>
@@ -423,15 +287,11 @@
                             <button type="button" class="amount-btn bg-white hover:bg-blue-500 hover:text-white border border-gray-300 text-gray-800 font-bold py-3 px-6 rounded-full transition-colors duration-200 shadow" data-amount="100">R100</button>
                             <button type="button" class="amount-btn bg-white hover:bg-blue-500 hover:text-white border border-gray-300 text-gray-800 font-bold py-3 px-6 rounded-full transition-colors duration-200 shadow" data-amount="200">R200</button>
                         </div>
-                        
                         <div class="mb-6">
                             <label for="amount-input" class="block text-sm font-medium text-gray-700 mb-2">Custom Amount (R)</label>
                             <input type="number" id="amount-input" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors" placeholder="e.g., 75.00" min="10" step="0.01" required>
                         </div>
-
-                        <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-xl hover:bg-blue-700 transition-colors duration-200 shadow-lg">
-                            Load Now
-                        </button>
+                        <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-xl hover:bg-blue-700 transition-colors duration-200 shadow-lg">Load Now</button>
                     </form>
                 </div>
             `;
@@ -440,7 +300,6 @@
                 <div class="w-full max-w-2xl mx-auto p-8 bg-white bg-opacity-70 rounded-3xl shadow-2xl backdrop-blur-md border border-gray-300">
                     <h1 class="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-400 mb-6">Account Settings</h1>
                     <p class="text-lg text-gray-700 mb-6">Update your personal and account information below.</p>
-                    
                     <form id="settings-form">
                         <div class="mb-4">
                             <label for="user-name" class="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
@@ -461,103 +320,109 @@
                             <label for="meter-id" class="block text-sm font-medium text-gray-700 mb-2">Meter ID</label>
                             <input type="text" id="meter-id" class="w-full p-3 border border-gray-300 rounded-lg bg-gray-200 cursor-not-allowed" value="2345-6789-1234" disabled>
                         </div>
-                        
-                        <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-xl hover:bg-blue-700 transition-colors duration-200 shadow-lg">
-                            Save Changes
-                        </button>
+                        <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 px-4 rounded-xl hover:bg-blue-700 transition-colors duration-200 shadow-lg">Save Changes</button>
                     </form>
                 </div>
             `;
-
-            // Function to render the correct page content
-            function renderPage(page) {
-                // Remove 'font-bold' from all nav links
-                document.querySelectorAll('nav a[data-page]').forEach(l => l.classList.remove('font-bold', 'text-blue-600'));
-                
-                // Add 'font-bold' to the active link (if it exists)
-                const activeLink = document.querySelector(`nav a[data-page="${page}"]`);
-                if (activeLink) {
-                    activeLink.classList.add('font-bold', 'text-blue-600');
-                }
-
-                switch(page) {
-                    case 'topup':
-                        mainContent.innerHTML = topUpContent;
-                        // Add event listeners for the new form
-                        const topUpForm = document.getElementById('top-up-form');
-                        const meterNumberInput = document.getElementById('meter-number-input'); // Get new meter number field
-                        const amountInput = document.getElementById('amount-input');
-                        const amountButtons = document.querySelectorAll('.amount-btn');
-
-                        // Pre-set amount buttons
-                        amountButtons.forEach(button => {
-                            button.addEventListener('click', () => {
-                                amountInput.value = button.dataset.amount;
-                            });
-                        });
-                        
-                        // Form submission handler
-                        topUpForm.addEventListener('submit', (event) => {
-                            event.preventDefault();
-                            const amount = amountInput.value;
-                            const meterNumber = meterNumberInput.value; // Get meter number value
-                            if (amount && amount > 0) {
-                                showModal('Success!', `Successfully requested a top-up of R${amount} for meter number ${meterNumber}. Your transaction is being processed.`);
-                            } else {
-                                showModal('Error', 'Please enter a valid amount to top up.', 'fas fa-exclamation-circle text-red-500');
-                            }
-                        });
-                        break;
-                    case 'settings':
-                        mainContent.innerHTML = settingsContent;
-                        // Add event listeners for the new settings form
-                        const settingsForm = document.getElementById('settings-form');
-                        settingsForm.addEventListener('submit', (event) => {
-                            event.preventDefault();
-                            // In a real app, you would send this data to a server.
-                            const name = document.getElementById('user-name').value;
-                            showModal('Settings Saved!', `Your account information has been updated.`, 'fas fa-check-circle text-green-500');
-                        });
-                        break;
-                    case 'dashboard':
-                    default:
-                        mainContent.innerHTML = dashboardContent;
-                        // Since the links are now cards, we need to add event listeners here
-                        const settingsCard = mainContent.querySelector('[data-page="settings"]');
-                        if (settingsCard) {
-                            settingsCard.addEventListener('click', () => renderPage('settings'));
-                        }
-                        const topUpCard = mainContent.querySelector('[data-page="topup"]');
-                        if (topUpCard) {
-                            topUpCard.addEventListener('click', () => renderPage('topup'));
-                        }
-                        break;
-                }
-            }
             
-            // Show the modal with dynamic content
+            const contactContent = `
+                <div class="w-full max-w-2xl mx-auto p-8 bg-white bg-opacity-70 rounded-3xl shadow-2xl backdrop-blur-md border border-gray-300 text-center">
+                    <h1 class="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-400 mb-4">Contact Us</h1>
+                    <p class="text-lg text-gray-700 mb-4">Have a question? We're here to help.</p>
+                    <p class="text-xl font-semibold text-gray-800">Email: support@gridpay.com</p>
+                    <p class="text-xl font-semibold text-gray-800">Phone: 123-456-7890</p>
+                </div>
+            `;
+
             function showModal(title, message, iconClass = 'fas fa-check-circle text-green-500') {
                 modalTitle.textContent = title;
                 modalMessage.textContent = message;
                 document.getElementById('modal-icon').className = iconClass + ' text-5xl';
                 dynamicModalOverlay.classList.add('active');
-                setTimeout(() => {
-                    dynamicModalContent.classList.add('show');
-                }, 10);
+                setTimeout(() => { dynamicModalContent.classList.add('show'); }, 10);
             }
 
-            // Hide the modal
             function hideModal() {
                 dynamicModalContent.classList.remove('show');
-                setTimeout(() => {
-                    dynamicModalOverlay.classList.remove('active');
-                }, 300);
+                setTimeout(() => { dynamicModalOverlay.classList.remove('active'); }, 300);
+            }
+            closeModalBtn.addEventListener('click', hideModal);
+
+            function setupPageListeners() {
+                // Attach event listeners for dashboard cards
+                const dashboardCards = mainContent.querySelectorAll('[data-page]');
+                if (dashboardCards.length > 0) {
+                    dashboardCards.forEach(card => {
+                        card.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            renderPage(e.currentTarget.dataset.page);
+                        });
+                    });
+                }
+
+                // Attach event listeners for Top-up page
+                const topUpForm = document.getElementById('top-up-form');
+                if (topUpForm) {
+                    const amountInput = document.getElementById('amount-input');
+                    const meterNumberInput = document.getElementById('meter-number-input'); // Added this line
+                    const amountButtons = document.querySelectorAll('.amount-btn');
+                    
+                    amountButtons.forEach(button => {
+                        button.addEventListener('click', () => {
+                            amountInput.value = button.dataset.amount;
+                        });
+                    });
+                    
+                    topUpForm.addEventListener('submit', (event) => {
+                        event.preventDefault();
+                        const amount = amountInput.value;
+                        const meterNumber = meterNumberInput.value; // Get meter number value
+                        
+                        if (amount && amount > 0) {
+                            // Corrected: Save both values to localStorage
+                            localStorage.setItem('topUpAmount', amount);
+                            localStorage.setItem('meterNumber', meterNumber);
+                            
+                            window.location.href = 'payment.html';
+                        } else {
+                            showModal('Error', 'Please enter a valid amount to top up.', 'fas fa-exclamation-circle text-red-500');
+                        }
+                    });
+                }
+
+                // Attach event listeners for Settings page
+                const settingsForm = document.getElementById('settings-form');
+                if (settingsForm) {
+                    settingsForm.addEventListener('submit', (event) => {
+                        event.preventDefault();
+                        showModal('Settings Saved!', 'Your account information has been updated.', 'fas fa-check-circle text-green-500');
+                    });
+                }
             }
 
-            // Close modal button event listener
-            closeModalBtn.addEventListener('click', hideModal);
-            
-            // Client-side routing for nav links
+            function renderPage(page) {
+                document.querySelectorAll('nav a[data-page]').forEach(l => l.classList.remove('font-bold', 'text-blue-600'));
+                const activeLink = document.querySelector(`nav a[data-page="${page}"]`);
+                if (activeLink) { activeLink.classList.add('font-bold', 'text-blue-600'); }
+
+                switch(page) {
+                    case 'topup':
+                        mainContent.innerHTML = topUpContent;
+                        break;
+                    case 'settings':
+                        mainContent.innerHTML = settingsContent;
+                        break;
+                    case 'contact':
+                        mainContent.innerHTML = contactContent;
+                        break;
+                    case 'dashboard':
+                    default:
+                        mainContent.innerHTML = dashboardContent;
+                        break;
+                }
+                setupPageListeners();
+            }
+
             document.querySelectorAll('nav a[data-page]').forEach(link => {
                 link.addEventListener('click', (event) => {
                     event.preventDefault();
@@ -565,7 +430,6 @@
                 });
             });
 
-            // Render the initial page (dashboard)
             renderPage('dashboard');
         };
     </script>
